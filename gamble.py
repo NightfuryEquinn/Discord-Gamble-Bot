@@ -83,10 +83,10 @@ async def coinflipd(message, firstName: discord.Member, secondName: discord.Memb
     arrow_down = '⬇'
 
     result_head = [
-'Head it is. Hmm, when did a coin has head. Interesting. And by the way, the coin belongs to {}. For now. Unless you challenged {} again.'.format(secondName, firstName)
+'Head it is. Hmm, when did a coin has head. Interesting.'
 ]
     result_tail = [
-'Ha! It is tail. {} buy a coffee for {}, or bubble tea. Well, {} said do not mind giving me cash.'.format(secondName, firstName, firstName)
+'Ha! It is tail.'
 ]
     result_stand = [
 'Well, you never know. {} flipped and made the coin stands. Mind-blowing, eh? {}. You are not, obviously.'.format(firstName, secondName)
@@ -100,19 +100,25 @@ async def coinflipd(message, firstName: discord.Member, secondName: discord.Memb
     await m1.add_reaction(arrow_up)
     await m1.add_reaction(arrow_down)
 
+# Check is it the correct user reacting the message
     def valid(reaction, user):
         return user == secondName and str(reaction) in [arrow_up, arrow_down]
 
     try:
         reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
         if str(reaction) == arrow_up:
-            await message.send(random.choice(result_head))
+            if result == ['Head']:
+                await message.send(random.choice(result_head))
+            else:
+                await message.send('Too bad. Wrong guess. No luck. Bye bye.')
         elif str(reaction) == arrow_down:
-            await message.send(random.choice(result_tail))
+            if result == ['Tail']:
+                await message.send(random.choice(result_tail))
+            else:
+                await message.send('Too bad. Wrong guess. No luck. Bye bye.')
         elif result == ['It stands!']:
             await message.send(random.choice(result_stand))
     except asyncio.TimeoutError:
             await message.send('Interesting, the coin has flipped for 30 seconds in the air and {} did not guess. I wonder why?'.format(secondName))
         
-
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
