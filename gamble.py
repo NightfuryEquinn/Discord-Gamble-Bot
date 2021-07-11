@@ -34,13 +34,13 @@ async def rules(message):
     name = message.author.name
     avatar = message.author.avatar_url
 
-    rules = discord.Embed(title = '{} is looking at the No-Currency-Gamble Rulebook'.format(name), description = 'There are no currency used, this bot uses your luck and cowardness. Have fun! 😉', color = 0xf8f8ff)
+    rules = discord.Embed(title = '{} is looking at the No-Currency-Gamble Rulebook'.format(name), description = 'There are no currency used, this bot uses your luck and unluck. Have fun! 😉', color = 0xf8f8ff)
     rules.set_thumbnail(url = avatar)
-    rules.add_field(name = 'Coinflip', value = 'You dont know what is coinflip? Out you go, you are not eligible to gamble. Syntax: Coinflips for one; Coinflipd for two', inline = False)
-    rules.add_field(name = 'Guess', value = 'Pick a card, big or small or forfeit or fool them.', inline = False)
-    rules.add_field(name = 'Blackjack', value = 'Blackjack. What? A stray dog also knows blackjack, you dont know? Ask him.', inline = False)
-    rules.add_field(name = 'Texas Poker', value = 'Ask someone in your discord server. Long description.', inline = False)
-    rules.add_field(name = 'Landlord', value = 'The ultimate gamble. China version by the way.', inline = False)
+    rules.add_field(name = 'Coinflip', value = 'coinflips [cfs] for one\ncoinflipd [cfd <p1> <p2>] for two', inline = False)
+    rules.add_field(name = 'Guess', value = 'guesss [us] for one\nguessd [ud <p1> <p2>] for two', inline = False)
+    rules.add_field(name = 'Blackjack', value = 'blackjack [bj <p1> <p2>]', inline = False)
+    rules.add_field(name = 'Texas Poker', value = 'Under construction', inline = False)
+    rules.add_field(name = 'Landlord', value = 'Under construction', inline = False)
     await message.send(embed = rules)
 
 # Coinflip for one
@@ -72,7 +72,6 @@ async def coinflips(message):
         await message.send(random.choice(result_stand))
 
 
-
 # Coinflip for two
 @bot.command(aliases = ['cfd'])
 async def coinflipd(message, firstName: discord.Member, secondName: discord.Member):
@@ -97,6 +96,7 @@ async def coinflipd(message, firstName: discord.Member, secondName: discord.Memb
 
     m1 = await message.send('What is your guess, {}? The coin is still spinning.'.format(secondName))
 
+# Add reaction emoji
     await m1.add_reaction(arrow_up)
     await m1.add_reaction(arrow_down)
 
@@ -120,5 +120,146 @@ async def coinflipd(message, firstName: discord.Member, secondName: discord.Memb
             await message.send(random.choice(result_stand))
     except asyncio.TimeoutError:
             await message.send('Interesting, the coin has flipped for 30 seconds in the air and {} did not guess. I wonder why?'.format(secondName))
-        
+
+
+# Guess the card for one
+@bot.command(aliases = ['us'])
+async def guesss(message):
+    name = message.author.name
+
+    diamond = '♦️'
+    club = '♣️'
+    heart = '♥️'
+    spade = '♠️'
+    card_pattern = ['Diamond', 'Club', 'Heart', 'Spade']
+    luck1 = [1, 1, 1, 1]
+
+    two = '2️⃣'
+    three = '3️⃣'
+    four = '4️⃣'
+    five = '5️⃣'
+    six = '6️⃣'
+    seven = '7️⃣'
+    eight = '8️⃣'
+    nine = '9️⃣'
+    ten = '🔟'
+    jack = '🤴'
+    queen = '👸'
+    king = '👑'
+    ace = '🅰️'
+    card_no = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    luck2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+    result_card_pattern = random.choices(card_pattern, luck1, k = 1)
+    result_card_no = random.choices(card_no, luck2, k = 1)
+
+    m1 = await message.send('Guess my card pattern, human. Or shall I call you by your name, {}'.format(name))
+    m1.add_reaction(diamond)
+    m1.add_reaction(club)
+    m1.add_reaction(heart)
+    m1.add_reaction(spade)
+
+    def valid(reaction, user):
+        return user == name and str(reaction) in [diamond, club, heart, spade, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
+    
+    try:
+        reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid)
+        if str(reaction) == diamond:
+            if result_card_pattern == ['Diamond']:
+                await message.send('Well, well, well, guessed. Now, try this.')
+            else:
+                await message.send('Too bad so sad, human.')
+        elif str(reaction) == club:
+            if result_card_pattern == ['Club']:
+                await message.send('Well, well, well, guessed. Now, try this.')
+            else:
+                await message.send('Too bad so sad, human.')
+        elif str(reaction) == heart:
+            if result_card_pattern == ['Heart']:
+                await message.send('Well, well, well, guessed. Now, try this.')
+            else:
+                await message.send('Too bad so sad, human.')
+        elif str(reaction) == spade:
+            if result_card_pattern == ['Spade']:
+                await message.send('Well, well, well, guessed. Now, try this.')
+            else:
+                await message.send('Too bad so sad, human.')
+    except asyncio.TimeoutError:
+        await message.send('Hellooooo? Anybody thereeee? No? All your luck is mine now 👀. Do not leave yet!')
+
+    m2 = await message.send('Guess my card number now. Prove to me you are worthy human, {}'.format(name))
+    m2.add_reaction(two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace)
+
+    try:
+        reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid)
+        if str(reaction) == two:
+            if result_card_no == ['2']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == three:
+            if result_card_no == ['3']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == four:
+            if result_card_no == ['4']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == five:
+            if result_card_no == ['5']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == six:
+            if result_card_no == ['6']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == seven:
+            if result_card_no == ['7']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == eight:
+            if result_card_no == ['8']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == nine:
+            if result_card_no == ['9']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == ten:
+            if result_card_no == ['10']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == jack:
+            if result_card_no == ['J']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == queen:
+            if result_card_no == ['Q']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == king:
+            if result_card_no == ['K']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+        elif str(reaction) == ace:
+            if result_card_no == ['A']:
+                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(name))
+            else:
+                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+    except asyncio.TimeoutError:
+        await message.send('You are unworthy, human!')
+
+
+
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
