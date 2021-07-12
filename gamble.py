@@ -151,7 +151,7 @@ async def guesss(message, firstName: discord.Member):
     result_card_pattern = random.choices(card_pattern, luck1, k = 1)
     result_card_no = random.choices(card_no, luck2, k = 1)
 
-    m1 = await message.send('Guess my card pattern, human. Or shall I call you by your name, {}'.format(firstName))
+    m1 = await message.send('Guess my card pattern, human. Or shall I call you by your name, {}. Two chances.'.format(firstName))
     await m1.add_reaction(diamond)
     await m1.add_reaction(club)
     await m1.add_reaction(heart)
@@ -161,31 +161,34 @@ async def guesss(message, firstName: discord.Member):
         return user == firstName and str(reaction) in [diamond, club, heart, spade]
     
     try:
-        reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid1)
-        if str(reaction) == diamond:
-            if result_card_pattern == ['Diamond']:
-                await message.send('Well, well, well, guessed. Now, try this.')
-            else:
-                await message.send('Too bad so sad, human.')
-        elif str(reaction) == club:
-            if result_card_pattern == ['Club']:
-                await message.send('Well, well, well, guessed. Now, try this.')
-            else:
-                await message.send('Too bad so sad, human.')
-        elif str(reaction) == heart:
-            if result_card_pattern == ['Heart']:
-                await message.send('Well, well, well, guessed. Now, try this.')
-            else:
-                await message.send('Too bad so sad, human.')
-        elif str(reaction) == spade:
-            if result_card_pattern == ['Spade']:
-                await message.send('Well, well, well, guessed. Now, try this.')
-            else:
-                await message.send('Too bad so sad, human.')
+        chance1 = 0
+        while chance1 < 2:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid1)
+            if str(reaction) == diamond:
+                if result_card_pattern == ['Diamond']:
+                    await message.send('Well, well, well, guessed. Now, try this.')
+                else:
+                    await message.send('Too bad so sad, human.')
+            elif str(reaction) == club:
+                if result_card_pattern == ['Club']:
+                    await message.send('Well, well, well, guessed. Now, try this.')
+                else:
+                    await message.send('Too bad so sad, human.')
+            elif str(reaction) == heart:
+                if result_card_pattern == ['Heart']:
+                    await message.send('Well, well, well, guessed. Now, try this.')
+                else:
+                    await message.send('Too bad so sad, human.')
+            elif str(reaction) == spade:
+                if result_card_pattern == ['Spade']:
+                    await message.send('Well, well, well, guessed. Now, try this.')
+                else:
+                    await message.send('Too bad so sad, human.')
+            chance1 = chance1 + 1
     except asyncio.TimeoutError:
         await message.send('Hellooooo? Anybody thereeee? No? All your luck is mine now 👀. Do not leave yet!')
 
-    m2 = await message.send('Guess my card number now. Prove to me you are worthy human, {}'.format(firstName))
+    m2 = await message.send('Guess my card number now. Prove to me you are worthy human, {}. Four chances.'.format(firstName))
     await m2.add_reaction(two)
     await m2.add_reaction(three)
     await m2.add_reaction(four)
@@ -204,72 +207,79 @@ async def guesss(message, firstName: discord.Member):
         return user == firstName and str(reaction) in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
 
     try:
-        reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2)
-        if str(reaction) == two:
-            if result_card_no == ['2']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+        chance2 = 0
+        while chance2 < 4:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2)
+            if str(reaction) == two:
+                if result_card_no == ['2']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == three:
+                if result_card_no == ['3']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == four:
+                if result_card_no == ['4']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == five:
+                if result_card_no == ['5']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == six:
+                if result_card_no == ['6']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == seven:
+                if result_card_no == ['7']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == eight:
+                if result_card_no == ['8']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == nine:
+                if result_card_no == ['9']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == ten:
+                if result_card_no == ['10']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == jack:
+                if result_card_no == ['J']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == queen:
+                if result_card_no == ['Q']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == king:
+                if result_card_no == ['K']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            elif str(reaction) == ace:
+                if result_card_no == ['A']:
+                    await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
+                else:
+                    await message.send('Try again, when you feel you are worthy enough to challenge me.')
+            chance2 = chance2 + 1
+            if chance2 == 4:
+                await message.send('The card is {} {}'.format(result_card_pattern, result_card_no))
             else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == three:
-            if result_card_no == ['3']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == four:
-            if result_card_no == ['4']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == five:
-            if result_card_no == ['5']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == six:
-            if result_card_no == ['6']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == seven:
-            if result_card_no == ['7']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == eight:
-            if result_card_no == ['8']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == nine:
-            if result_card_no == ['9']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == ten:
-            if result_card_no == ['10']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == jack:
-            if result_card_no == ['J']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == queen:
-            if result_card_no == ['Q']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == king:
-            if result_card_no == ['K']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
-        elif str(reaction) == ace:
-            if result_card_no == ['A']:
-                await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-            else:
-                await message.send('Try again, when you feel you are worthy enough to challenge me.')
+                pass
     except asyncio.TimeoutError:
         await message.send('You are unworthy, human! The card is {} {}'.format(result_card_pattern, result_card_no))
 
