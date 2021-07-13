@@ -36,11 +36,12 @@ async def rules(message):
 
     rules = discord.Embed(title = '{} is looking at the No-Currency-Gamble Rulebook'.format(name), description = 'There are no currency used, this bot uses your luck and unluck. Have fun! 😉', color = 0xf8f8ff)
     rules.set_thumbnail(url = avatar)
-    rules.add_field(name = '💰 Coinflip', value = 'coinflips [cfs] for one\ncoinflipd [cfd <@p1> <@p2>] for two', inline = False)
-    rules.add_field(name = '🤨 Guess', value = 'guesss [us <@p1>] for one\nguessd [ud <@p1> <@p2>] for two', inline = False)
-    rules.add_field(name = '🎭 Blackjack', value = 'blackjack [bj <@p1> <@p2>]', inline = False)
-    rules.add_field(name = '💎 Texas Poker', value = 'Under construction', inline = False)
-    rules.add_field(name = '🃏 Landlord', value = 'Under construction', inline = False)
+    rules.add_field(name = '💰 Coinflip', value = 'For one. [cfs]\nFor two. [cfd <@p1> <@p2>]', inline = False)
+    rules.add_field(name = '🤖 Guess The Bot Card', value = 'Versus Bot! [gs <@p1>]', inline = False)
+    rules.add_field(name = '🤨 Liar Guess', value = 'Mind game with one! [lg <@p1> <@p2>]', inline = False)
+    rules.add_field(name = '🎭 Blackjack', value = 'Classic! [bj <@p1> <@p2>]', inline = False)
+    rules.add_field(name = '💎 Texas Poker', value = 'Stack chips! [tp <@p1> <@p2> <@p3>] UC', inline = False)
+    rules.add_field(name = '🃏 Landlord', value = 'Legendary card game! [ll <@p1> <@p2> <@p3> <@p4> UC', inline = False)
     await message.send(embed = rules)
 
 # Coinflip for one
@@ -122,15 +123,15 @@ async def coinflipd(message, firstName: discord.Member, secondName: discord.Memb
             await message.send('Interesting, the coin has flipped for 30 seconds in the air and {} did not guess. I wonder why?'.format(secondName))
 
 
-# Guess the card for one
-@bot.command(aliases = ['us'])
-async def guesss(message, firstName: discord.Member):
+# Guess the bot card
+@bot.command(aliases = ['gs'])
+async def guess(message, firstName: discord.Member):
     diamond = '♦️'
     club = '♣️'
     heart = '♥️'
     spade = '♠️'
     card_pattern = ['Diamond', 'Club', 'Heart', 'Spade']
-    luck1 = [1, 1, 1, 1]
+    luck1 = [0.25, 0.25, 0.25, 0.25]
 
     two = '2️⃣'
     three = '3️⃣'
@@ -146,7 +147,7 @@ async def guesss(message, firstName: discord.Member):
     king = '👑'
     ace = '🅰️'
     card_no = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-    luck2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    luck2 = [0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13]
 
     result_card_pattern = random.choices(card_pattern, luck1, k = 1)
     result_card_no = random.choices(card_no, luck2, k = 1)
@@ -284,273 +285,164 @@ async def guesss(message, firstName: discord.Member):
         await message.send('You are unworthy, human! The card is {} {}'.format(result_card_pattern, result_card_no))
 
 
-# Guess the card for two
-@bot.command(aliases = ['ud'])
-async def guessd(message, firstName: discord.Member, secondName: discord.Member):
-    diamond = '♦️'
-    club = '♣️'
-    heart = '♥️'
-    spade = '♠️'
-    card_pattern = ['Diamond', 'Club', 'Heart', 'Spade']
-    luck1 = [1, 1, 1, 1]
+# Liar Guess for three
+@bot.command(aliases = ['lg'])
+async def lguess(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member):
+    add = '➕'
+    hold = '🛑'
+    fold = '❌'
+    all_in = '💲'
 
-    two = '2️⃣'
-    three = '3️⃣'
-    four = '4️⃣'
-    five = '5️⃣'
-    six = '6️⃣'
-    seven = '7️⃣'
-    eight = '8️⃣'
-    nine = '9️⃣'
-    ten = '🔟'
-    jack = '🤴'
-    queen = '👸'
-    king = '👑'
-    ace = '🅰️'
+    famepool = 3
+    fame1 = 10
+    fame2 = 10
+    fame3 = 10
+
+    fold1 = False
+    fold2 = False
+    fold3 = False
+
+    hold1 = False
+    hold2 = False
+    hold3 = False
+    
+    card_pattern = ['Diamond', 'Club', 'Heart', 'Spade']
+    luck1 = [0.25, 0.25, 0.25, 0.25]
+
     card_no = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-    luck2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    luck2 = [0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13]
 
     result_card_pattern1 = random.choices(card_pattern, luck1, k = 1)
     result_card_no1 = random.choices(card_no, luck2, k = 1)
     result_card_pattern2 = random.choices(card_pattern, luck1, k = 1)
     result_card_no2 = random.choices(card_no, luck2, k = 1)
+    result_card_pattern3 = random.choices(card_pattern, luck1, k = 1)
+    result_card_no3 = random.choices(card_no, luck2, k = 1)
 
-    temp1 = False
-    temp2 = False
-    temp3 = False
-    temp4 = False
-
-    await message.send('Prepare for mind battle between {} and {}. Guess. The. Card.'.format(firstName.mention, secondName.mention))
+    await message.send('Prepare for mind game between {} and {}. Who is sus 👻?'.format(firstName.mention, secondName.mention))
     await asyncio.sleep(2)
-    await firstName.send('Your card is {} {}.'.format(result_card_pattern1, result_card_no1))
-    await secondName.send('Your card is {} {}.'.format(result_card_pattern2, result_card_no2))
-    await asyncio.sleep(5)
 
-    def valid1_1(user, reaction):
-        return user == firstName and str(reaction) in [diamond, club, heart, spade]
+    await firstName.send('{} card is {} {}.\n{} card is {} {}.'.format(secondName, result_card_pattern2, result_card_no2, thirdName, result_card_pattern3, result_card_no3))
+    await secondName.send('{} card is {} {}.\n{} card is {} {}.'.format(firstName, result_card_pattern1, result_card_no1, thirdName, result_card_pattern3, result_card_no3))
+    await thirdName.send('{} card is {} {}.\n{} card is {} {}.'.format(firstName, result_card_pattern1, result_card_no1, secondName, result_card_pattern2, result_card_no2))
     
-    def valid2_1(user, reaction):
-        return user == secondName and str(reaction) in [diamond, club, heart, spade]
-
-    def valid1_2(reaction, user):
-        return user == firstName and str(reaction) in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
-
-    def valid2_2(reaction, user):
-        return user == secondName and str(reaction) in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
-
-# First name guess card pattern
-    m1 = await message.send('Round One: Guess the pattern. Two chances! {} first.'.format(firstName.mention))
-    await m1.add_reaction(diamond)
-    await m1.add_reaction(club)
-    await m1.add_reaction(heart)
-    await m1.add_reaction(spade)
-
-    try:
-        chance1 = 0
-        while chance1 < 2:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid1_1)
-            if str(reaction) == diamond:
-                if result_card_pattern2 == ['Diamond']:
-                    temp1 = True
-            elif str(reaction) == club:
-                if result_card_pattern2 == ['Club']:
-                    temp1 = True
-            elif str(reaction) == heart:
-                if result_card_pattern2 == ['Heart']:
-                    temp1 = True
-            elif str(reaction) == spade:
-                if result_card_pattern2 == ['Spade']:
-                    temp1 = True
-            chance1 = chance1 + 1
-    except asyncio.TimeoutError:
-        await message.send('Hmm, someone is afraid 😏.')
-
-# Second name guess card pattern
-    m2 = await message.send('Your turn, {}.'.format(secondName.mention))
-    await m2.add_reaction(diamond)
-    await m2.add_reaction(club)
-    await m2.add_reaction(heart)
-    await m2.add_reaction(spade)
-
-    try:
-        chance2 = 0
-        while chance2 < 2:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid2_1)
-            if str(reaction) == diamond:
-                if result_card_pattern1 == ['Diamond']:
-                    temp2 = True
-            elif str(reaction) == club:
-                if result_card_pattern1 == ['Club']:
-                    temp2 = True
-            elif str(reaction) == heart:
-                if result_card_pattern1 == ['Heart']:
-                    temp2 = True
-            elif str(reaction) == spade:
-                if result_card_pattern1 == ['Spade']:
-                    temp2 = True
-            chance2 = chance2 + 1
-    except asyncio.TimeoutError:
-        await message.send('Hmm, someone is afraid also 😏.')
-
-# First name guess card number
-    m3 = await message.send('Round Two! Guess the card number. Four! Chances. {} first.'.format(firstName.mention))
-    await m3.add_reaction(two)
-    await m3.add_reaction(three)
-    await m3.add_reaction(four)
-    await m3.add_reaction(five)
-    await m3.add_reaction(six)
-    await m3.add_reaction(seven)
-    await m3.add_reaction(eight)
-    await m3.add_reaction(nine)
-    await m3.add_reaction(ten)
-    await m3.add_reaction(jack)
-    await m3.add_reaction(queen)
-    await m3.add_reaction(king)
-    await m3.add_reaction(ace)
-
-    try:
-        chance3 = 0
-        while chance3 < 4:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid1_2)
-            if str(reaction) == two:
-                if result_card_no2 == ['2']:
-                    temp3 = True
-            elif str(reaction) == three:
-                if result_card_no2 == ['3']:
-                    temp3 = True
-            elif str(reaction) == four:
-                if result_card_no2 == ['4']:
-                    temp3 = True
-            elif str(reaction) == five:
-                if result_card_no2 == ['5']:
-                    temp3 = True
-            elif str(reaction) == six:
-                if result_card_no2 == ['6']:
-                    temp3 = True
-            elif str(reaction) == seven:
-                if result_card_no2 == ['7']:
-                    temp3 = True
-            elif str(reaction) == eight:
-                if result_card_no2 == ['8']:
-                    temp3 = True
-            elif str(reaction) == nine:
-                if result_card_no2 == ['9']:
-                    temp3 = True
-            elif str(reaction) == ten:
-                if result_card_no2 == ['10']:
-                    temp3 = True
-            elif str(reaction) == jack:
-                if result_card_no2 == ['J']:
-                    temp3 = True
-            elif str(reaction) == queen:
-                if result_card_no2 == ['Q']:
-                    temp3 = True
-            elif str(reaction) == king:
-                if result_card_no2 == ['K']:
-                    temp3 = True
-            elif str(reaction) == ace:
-                if result_card_no2 == ['A']:
-                    temp3 = True
-            chance3 = chance3 + 1
-    except asyncio.TimeoutError:
-        await message.send('Are you playing or not? 🙄')
-
-# Second name guess card number
-    m4 = await message.send('{}, now is your turn.'.format(secondName.mention))
-    await m4.add_reaction(two)
-    await m4.add_reaction(three)
-    await m4.add_reaction(four)
-    await m4.add_reaction(five)
-    await m4.add_reaction(six)
-    await m4.add_reaction(seven)
-    await m4.add_reaction(eight)
-    await m4.add_reaction(nine)
-    await m4.add_reaction(ten)
-    await m4.add_reaction(jack)
-    await m4.add_reaction(queen)
-    await m4.add_reaction(king)
-    await m4.add_reaction(ace)
-
-    try:
-        chance4 = 0
-        while chance4 < 4:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2_2)
-            if str(reaction) == two:
-                if result_card_no1 == ['2']:
-                    temp4 = True
-            elif str(reaction) == three:
-                if result_card_no1 == ['3']:
-                    temp4 = True
-            elif str(reaction) == four:
-                if result_card_no1 == ['4']:
-                    temp4 = True
-            elif str(reaction) == five:
-                if result_card_no1 == ['5']:
-                    temp4 = True
-            elif str(reaction) == six:
-                if result_card_no1 == ['6']:
-                    temp4 = True
-            elif str(reaction) == seven:
-                if result_card_no1 == ['7']:
-                    temp4 = True
-            elif str(reaction) == eight:
-                if result_card_no1 == ['8']:
-                    temp4 = True
-            elif str(reaction) == nine:
-                if result_card_no1 == ['9']:
-                    temp4 = True
-            elif str(reaction) == ten:
-                if result_card_no1 == ['10']:
-                    temp4 = True
-            elif str(reaction) == jack:
-                if result_card_no1 == ['J']:
-                    temp4 = True
-            elif str(reaction) == queen:
-                if result_card_no1 == ['Q']:
-                    temp4 = True
-            elif str(reaction) == king:
-                if result_card_no1 == ['K']:
-                    temp4 = True
-            elif str(reaction) == ace:
-                if result_card_no1 == ['A']:
-                    temp4 = True
-            chance4 = chance4 + 1
-    except asyncio.TimeoutError:
-        await message.send('This person is ghosting too? 🙄')
-
-# Getting result
     await asyncio.sleep(2)
+    await message.send('''
+Cards have been sent. Now, who has the largest number plus pattern 🤔?
+Each person has 10 fame.
+''')
+
+# Validation
+    def valid1(user, reaction):
+            return user == firstName and str(reaction) in [add, hold, fold, all_in]
+    
+    def valid2(user, reaction):
+            return user == secondName and str(reaction) in [add, hold, fold, all_in]
+
+    def valid3(user, reaction):
+            return user == thirdName and str(reaction) in [add, hold, fold, all_in]
+    
+    while hold1 == False and hold2 == False and hold3 == False:
+# First player
+        if fold1 != True:
+            m = await message.send("{}'s turn. {} fame left.".format(firstName, fame1))
+            await m.add_reaction(add)
+            await m.add_reaction(hold)
+            await m.add_reaction(fold)
+            await m.add_reaction(all_in)
+
+            try:
+                reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid1)
+                if str(reaction) == add:
+                    famepool = famepool + 1
+                    fame1 = fame1 - 1
+                    await message.send('{} added 1 fame to the fame pool 😬!'.format(firstName))
+                elif str(reaction) == hold:
+                    hold1 = True
+                    await message.send('{} holded 🥺!'.format(firstName))
+                elif str(reaction) == fold:
+                    hold1 = True
+                    fold1 = True
+                    await message.send('{} is scared and gave up 💩.'.format(firstName))
+                elif str(reaction) == all_in:
+                    hold1 = True
+                    fold1 = True
+                    famepool = famepool + fame1
+                    await message.send('OOOOOHHH! {} made a bald move! I mean bold 😲.'.format(firstName))
+            except asyncio.TimeoutError:
+                hold1 = True
+                fold1 = True
+                await message.send('{} did not answer. Forfeited 😤!'.format(firstName))
+
+# Second player
+        if fold2 != True:
+            m = await message.send("{}'s turn".format(secondName))
+            await m.add_reaction(add)
+            await m.add_reaction(hold)
+            await m.add_reaction(fold)
+            await m.add_reaction(all_in)
+
+            try:
+                reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid2)
+                if str(reaction) == add:
+                    famepool = famepool + 1
+                    fame2 = fame2 - 1
+                    await message.send('{} added 1 fame to the fame pool 😬!'.format(secondName))
+                elif str(reaction) == hold:
+                    hold2 = True
+                    await message.send('{} holded 🥺!'.format(secondName))
+                elif str(reaction) == fold:
+                    hold2 = True
+                    fold2 = True
+                    await message.send('{} is scared and gave up 💩.'.format(secondName))
+                elif str(reaction) == all_in:
+                    hold2 = True
+                    fold2 = True
+                    famepool = famepool + fame2
+                    await message.send('OOOOOHHH! {} made a bald move! I mean bold 😲.'.format(secondName))
+            except asyncio.TimeoutError:
+                hold2 = True
+                fold2 = True
+                await message.send('{} did not answer. Forfeited 😤!'.format(secondName))
+
+# Third player
+        if fold3 != True:
+            m = await message.send("{}'s turn".format(thirdName))
+            await m.add_reaction(add)
+            await m.add_reaction(hold)
+            await m.add_reaction(fold)
+            await m.add_reaction(all_in)
+
+            try:
+                reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid3)
+                if str(reaction) == add:
+                    famepool = famepool + 1
+                    fame3 = fame3 - 1
+                    await message.send('{} added 1 fame to the fame pool 😬!'.format(thirdName))
+                elif str(reaction) == hold:
+                    hold3 = True
+                    await message.send('{} holded 🥺!'.format(thirdName))
+                elif str(reaction) == fold:
+                    hold3 = True
+                    fold3 = True
+                    await message.send('{} is scared and gave up 💩.'.format(thirdName))
+                elif str(reaction) == all_in:
+                    hold3 = True
+                    fold3 = True
+                    famepool = famepool + fame3
+                    await message.send('OOOOOHHH! {} made a bald move! I mean bold 😲.'.format(thirdName))
+            except asyncio.TimeoutError:
+                hold3 = True
+                fold3 = True
+                await message.send('{} did not answer. Forfeited 😤!'.format(thirdName))
+
     await message.send('Getting result... Please standby... 🤓')
     await asyncio.sleep(2)
-
-    if temp1 == True and temp3 == True:
-        await message.send('Congrats! {} won this round BY LUCK 🥳.'.format(firstName.mention))
-    else:
-        pass
-
-    if temp2 == True and temp4 == True:
-        await message.send('Congrats! {} won this round BY LUCK 🤩.'.format(secondName.mention))
-    else:
-        pass
-
-    if temp1 == True or temp3 == True:
-        await message.send('{} guessed half correct! 🥳'.format(firstName.mention))
-    else:
-        pass
-
-    if temp1 == True or temp3 == True:
-        await message.send('{} guessed half correct! 🤩'.format(secondName.mention))
-
-    if temp1 != True and temp3 != True:
-        if temp2 != True and temp4 != True:
-            await message.send('Sad. Nobody won 🥴.')
-
-
-
-
-
-    
-    await message.send('The answer is simple, humans. {}s card is {} {}; {}s card is {} {}. See? EZ 🙃.'.format(firstName, result_card_pattern1, result_card_no1, secondName, result_card_pattern2, result_card_no2))
+    await message.send("{}'s card is {} {}.\n{}'s card is {} {}.\n{}'s card is {} {}.".format(firstName, result_card_pattern1, result_card_no1, secondName, result_card_pattern2, result_card_no2, thirdName, result_card_pattern3, result_card_no3))
+    await asyncio.sleep(2)
+    await message.send('So, the winner is ...🥁')
+    await asyncio.sleep(2)
+    await message.send('You see it yourself 🤪.')
 
 
 
