@@ -38,7 +38,10 @@ async def rules(message):
     rules.set_thumbnail(url = avatar)
     rules.add_field(name = '💰 Coinflip', value = 'For one. [cfs]\nFor two. [cfd <@p1> <@p2>]', inline = False)
     rules.add_field(name = '🤖 Guess The Bot Card', value = 'Versus Bot! [gs <@p1>]', inline = False)
-    rules.add_field(name = '🤨 Liar Guess', value = 'Mind game with one! [lg <@p1> <@p2> <@p3>]', inline = False)
+    rules.add_field(name = '🤨 Liar Guess', value = '''
+Mind game with one! [lg <@p1> <@p2> <@p3>]
+```➕ Raise 🛑 Hold ❌ Fold 💵ALL IN!```
+''', inline = False)
     rules.add_field(name = '🎭 Blackjack', value = 'Classic! [bj <@p1> <@p2>]', inline = False)
     rules.add_field(name = '💎 Texas Poker', value = 'Stack chips! [tp <@p1> <@p2> <@p3>] UC', inline = False)
     rules.add_field(name = '🃏 Landlord', value = 'Legendary card game! [ll <@p1> <@p2> <@p3> <@p4> UC', inline = False)
@@ -219,79 +222,79 @@ async def guess(message, firstName: discord.Member):
             reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2)
             if str(reaction) == two:
                 if result_card_no == ['2']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == three:
                 if result_card_no == ['3']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == four:
                 if result_card_no == ['4']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == five:
                 if result_card_no == ['5']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == six:
                 if result_card_no == ['6']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == seven:
                 if result_card_no == ['7']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == eight:
                 if result_card_no == ['8']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == nine:
                 if result_card_no == ['9']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == ten:
                 if result_card_no == ['10']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == jack:
                 if result_card_no == ['J']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == queen:
                 if result_card_no == ['Q']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == king:
                 if result_card_no == ['K']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
             elif str(reaction) == ace:
                 if result_card_no == ['A']:
-                    ans2 = False
+                    ans2 = True
                     await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                 else:
                     await message.send('Try again, when you feel you are worthy enough to challenge me.')
@@ -364,9 +367,13 @@ Each person has 10 fame.
             try:
                 reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid1)
                 if str(reaction) == add:
-                    famepool = famepool + 1
-                    fame1 = fame1 - 1
-                    await message.send('{} added 1 fame to the fame pool 😬!'.format(firstName))
+                    if fame1 == 0:
+                        hold1 = True
+                        fold1 = True
+                    else:
+                        famepool = famepool + 1
+                        fame1 = fame1 - 1
+                        await message.send('{} added 1 fame to the fame pool 😬!'.format(firstName))
                 elif str(reaction) == hold:
                     hold1 = True
                     await message.send('{} holded 🥺!'.format(firstName))
@@ -398,9 +405,13 @@ Each person has 10 fame.
             try:
                 reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid2)
                 if str(reaction) == add:
-                    famepool = famepool + 1
-                    fame2 = fame2 - 1
-                    await message.send('{} added 1 fame to the fame pool 😬!'.format(secondName))
+                    if fame2 == 0:
+                        hold2 = True
+                        fold2 = True
+                    else:
+                        famepool = famepool + 1
+                        fame2 = fame2 - 1
+                        await message.send('{} added 1 fame to the fame pool 😬!'.format(secondName))
                 elif str(reaction) == hold:
                     hold2 = True
                     await message.send('{} holded 🥺!'.format(secondName))
@@ -432,9 +443,13 @@ Each person has 10 fame.
             try:
                 reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid3)
                 if str(reaction) == add:
-                    famepool = famepool + 1
-                    fame3 = fame3 - 1
-                    await message.send('{} added 1 fame to the fame pool 😬!'.format(thirdName))
+                    if fame3 == 0:
+                        hold3 = True
+                        fold3 = True
+                    else:
+                        famepool = famepool + 1
+                        fame3 = fame3 - 1
+                        await message.send('{} added 1 fame to the fame pool 😬!'.format(thirdName))
                 elif str(reaction) == hold:
                     hold3 = True
                     await message.send('{} holded 🥺!'.format(thirdName))
@@ -461,6 +476,10 @@ Each person has 10 fame.
     await message.send('You see it yourself 🤪.')
 
 
+# Blackjack for two
+@bot.command(aliases = ['bj'])
+async def blackjack(message, firstName: discord.Member, secondName: discord.Member):
+    await message()
 
 
 
