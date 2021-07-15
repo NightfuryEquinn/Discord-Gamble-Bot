@@ -47,6 +47,7 @@ For three. [lg <@p1> <@p2> <@p3>]
 Classic! 
 For two. [bj2 <@p1> <@p2>]
 For three. [bj3 <@p1> <@p2> <@p3>]
+For four. [bj4 <@p1> <@p2> <@p3> <@p4>]
 ```🎴 Hit 🛑 Hold```    
     ''', inline = False)
     rules.add_field(name = '💎 Texas Poker', value = 'Stack chips! [tp <@p1> <@p2> <@p3>] UC', inline = False)
@@ -777,7 +778,208 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
             await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(thirdName.mention))
 
 
+# Blackjack for four
+@bot.command(aliases = ['bj4'])
+async def blackjack4(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member, fourthName: discord.Member):
+    hit = '🎴'
+    hold = '🛑'
 
+    hold1 = False
+    hold2 = False
+    hold3 = False
+    hold4 = False
+    
+    deck = [11, 11, 11, 11, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    random.shuffle(deck)
+
+# Starting round
+    hand1 = []
+    hand2 = []
+    hand3 = []
+    hand4 = []
+
+    all_hand = [hand1, hand2, hand3, hand4]
+    for i in range(0, 2):
+        for hands in all_hand:
+            a = random.choice(deck)
+            deck.remove(a)
+            hands.append(a)
+        
+    await firstName.send('Here is your card in hand.\n```{}```'.format(hand1))
+    await secondName.send('Here is your card in hand.\n```{}```'.format(hand2))
+    await thirdName.send('Here is your card in hand.\n```{}```'.format(hand3))
+    await fourthName.send('Here is your card in hand.\n```{}```'.format(hand4))
+    await asyncio.sleep(3)
+    await message.send('Look around. Although you cannot see 😶. Be prepared.')
+    await asyncio.sleep(2)
+
+# First player
+    while hold1 == False:
+        m = await message.send("{}'s turn.".format(firstName.mention))
+        await m.add_reaction(hit)
+        await m.add_reaction(hold)
+
+        def valid1(reaction, user):
+            return user == firstName and str(reaction) in [hit, hold]
+
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid1)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand1.append(card)
+                await firstName.send("Here is your card in hand.\n```{}```".format(hand1))
+            elif str(reaction) == hold:
+                hold1 = True
+                await message.send('{} holded for dear life 🥶!'.format(firstName))
+        except asyncio.TimeoutError:
+            await message.send("Why da heck you are not reacting 🤬?!")
+
+# Second player
+    while hold2 == False:
+        m = await message.send("{}'s turn.".format(secondName.mention))
+        await m.add_reaction(hit)
+        await m.add_reaction(hold)
+
+        def valid2(reaction, user):
+            return user == secondName and str(reaction) in [hit, hold]
+
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid2)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand2.append(card)
+                await secondName.send("Here is your card in hand.\n```{}```".format(hand2))
+            elif str(reaction) == hold:
+                hold2 = True
+                await message.send('{} holded for dear life 🥶!'.format(secondName))
+        except asyncio.TimeoutError:
+            await message.send("Why da heck you are not reacting 🤬?!")
+
+# Third player
+    while hold3 == False:
+        m = await message.send("{}'s turn.".format(thirdName.mention))
+        await m.add_reaction(hit)
+        await m.add_reaction(hold)
+
+        def valid3(reaction, user):
+            return user == thirdName and str(reaction) in [hit, hold]
+
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid3)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand3.append(card)
+                await thirdName.send("Here is your card in hand.\n```{}```".format(hand3))
+            elif str(reaction) == hold:
+                hold3 = True
+                await message.send('{} holded for dear life 🥶!'.format(thirdName))
+        except asyncio.TimeoutError:
+            await message.send("Why da heck you are not reacting 🤬?!")
+
+# Fourth player
+    while hold4 == False:
+        m = await message.send("{}'s turn.".format(fourthName.mention))
+        await m.add_reaction(hit)
+        await m.add_reaction(hold)
+
+        def valid4(reaction, user):
+            return user == fourthName and str(reaction) in [hit, hold]
+
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid4)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand4.append(card)
+                await fourthName.send("Here is your card in hand.\n```{}```".format(hand4))
+            elif str(reaction) == hold:
+                hold4 = True
+                await message.send('{} holded for dear life 🥶!'.format(fourthName))
+        except asyncio.TimeoutError:
+            await message.send("Why da heck you are not reacting 🤬?!")
+
+# Result first player
+    if 11 in hand1:
+        if sum(hand1) < 21:
+            for n, i in enumerate(hand1):
+                if i == 11:
+                    hand1[n] = 1
+                    x = sum(hand1)
+        elif sum(hand1) >= 21:
+            x = sum(hand1)
+    elif 11 not in hand1:
+        x = sum(hand1)
+    await message.send("{}'s card total is {}.".format(firstName.mention, x))
+
+    if hand1[0] == 11 and hand1[1] == 11:
+        await message.send("{} got DOUBLE ACES!!! 😳".format(firstName.mention))
+
+    if len(hand1) == 5:
+        if sum(hand1) <= 21:
+            await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(firstName.mention))
+
+# Result second player
+    if 11 in hand2:
+        if sum(hand2) < 21:
+            for n, i in enumerate(hand2):
+                if i == 11:
+                    hand2[n] = 1
+                    x = sum(hand2)
+        elif sum(hand2) >= 21:
+            x = sum(hand2)
+    elif 11 not in hand2:
+        x = sum(hand2)
+    await message.send("{}'s card total is {}.".format(secondName.mention, x))
+
+    if hand2[0] == 11 and hand2[1] == 11:
+        await message.send("{} got DOUBLE ACES!!! 😳".format(secondName.mention))
+
+    if len(hand2) == 5:
+        if sum(hand2) <= 21:
+            await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(secondName.mention))
+
+# Result third player
+    if 11 in hand3:
+        if sum(hand3) < 21:
+            for n, i in enumerate(hand3):
+                if i == 11:
+                    hand3[n] = 1
+                    x = sum(hand3)
+        elif sum(hand3) >= 21:
+            x = sum(hand3)
+    elif 11 not in hand3:
+        x = sum(hand3)
+    await message.send("{}'s card total is {}.".format(thirdName.mention, x))
+
+    if hand3[0] == 11 and hand3[1] == 11:
+        await message.send("{} got DOUBLE ACES!!! 😳".format(thirdName.mention))
+
+    if len(hand3) == 5:
+        if sum(hand3) <= 21:
+            await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(thirdName.mention))
+
+# Result third player
+    if 11 in hand4:
+        if sum(hand4) < 21:
+            for n, i in enumerate(hand4):
+                if i == 11:
+                    hand4[n] = 1
+                    x = sum(hand4)
+        elif sum(hand4) >= 21:
+            x = sum(hand4)
+    elif 11 not in hand4:
+        x = sum(hand4)
+    await message.send("{}'s card total is {}.".format(fourthName.mention, x))
+
+    if hand4[0] == 11 and hand4[1] == 11:
+        await message.send("{} got DOUBLE ACES!!! 😳".format(fourthName.mention))
+
+    if len(hand4) == 5:
+        if sum(hand4) <= 21:
+            await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(fourthName.mention))
 
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
