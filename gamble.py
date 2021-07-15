@@ -330,7 +330,7 @@ async def lguess(message, firstName: discord.Member, secondName: discord.Member,
     luck1 = [0.25, 0.25, 0.25, 0.25]
 
     card_no = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
-    luck2 = [0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13, 0.13]
+    luck2 = [0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.07, 0.07, 0.07, 0.07]
 
     result_card_pattern1 = random.choices(card_pattern, luck1, k = 1)
     result_card_no1 = random.choices(card_no, luck2, k = 1)
@@ -501,8 +501,100 @@ Each person has 10 fame.
 # Blackjack for two
 @bot.command(aliases = ['bj'])
 async def blackjack(message, firstName: discord.Member, secondName: discord.Member):
-    await message()
+    hit = '🎴'
+    hold = '🛑'
 
+    hold1 = False
+    hold2 = False
+    
+    deck = [11, 11, 11, 11, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+    random.shuffle(deck)
+
+# Starting round
+    hand1 = []
+    hand2 = []
+
+    all_hand = [hand1, hand2]
+    for i in range(0, 2):
+        for hands in all_hand:
+            a = random.choice(deck)
+            deck.remove(a)
+            hands.append(a)
+        
+    await firstName.send('Here is your card in hand.\n```{}```'.format(hand1))
+    await secondName.send('Here is your card in hand.\n```{}```'.format(hand2))
+    await asyncio.sleep(3)
+    await message.send('Look around. Although you cannot see 😶. Be prepared.')
+    await asyncio.sleep(2)
+
+# First player
+    m = await message.send("{}'s turn.".format(firstName.mention))
+    await m.add_reaction(hit)
+    await m.add_reaction(hold)
+
+    def valid1(reaction, user):
+        return user == firstName and str(reaction) in [hit, hold]
+
+    try:
+        while hold1 == False:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid1)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand1.append(card)
+                await firstName.send("Here is your card in hand.\n```{}```".format(hand1))
+            elif str(reaction) == hold:
+                hold1 == True
+                await message.send('{} holded for dear life 🥶!'.format(firstName))
+    except asyncio.TimeoutError:
+        await message.send("Why da heck you are not reacting 🤬?!")
+
+# Second player
+    m = await message.send("{}'s turn.".format(secondName.mention))
+    await m.add_reaction(hit)
+    await m.add_reaction(hold)
+
+    def valid2(reaction, user):
+        return user == secondName and str(reaction) in [hit, hold]
+
+    try:
+        while hold2 == False:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid2)
+            if str(reaction) == hit:
+                card = random.choice(deck)
+                deck.remove(card)
+                hand2.append(card)
+                await firstName.send("Here is your card in hand.\n```{}```".format(hand2))
+            elif str(reaction) == hold:
+                hold2 == True
+                await message.send('{} holded for dear life 🥶!'.format(secondName))
+    except asyncio.TimeoutError:
+        await message.send("Why da heck you are not reacting 🤬?!")
+
+# Result
+    players = [firstName, secondName]
+    for player in players:
+        for hands in all_hand:
+            if 11 in hands:
+                if sum(hands) < 21:
+                    for n, i in enumerate(hands):
+                        if i == 11:
+                            hands[n] = 1
+                            x = sum(hands)
+                            await message.send("{}'s card total is {}.".format(player.mention, x))
+                elif sum(hands) >= 21:
+                    x = sum(hands)
+                    await message.send("{}'s card total is {}.".format(player.mention, x))
+            elif 11 not in hands:
+                x = sum(hands)
+                await message.send("{}'s card total is {}.".format(player.mention, x))
+
+            if hands[0] == 11 and hands[1] == 11:
+                await message.send("{} got DOUBLE ACES!!! 😳".format(player.mention))
+
+            if len(hands) == 5:
+                if sum(hands) <= 21:
+                    await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(player.mention))
 
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
