@@ -40,7 +40,7 @@ async def rules(message):
     rules.add_field(name = '🤖 Guess The Bot Card', value = 'Versus Bot! [gs <@p1>]', inline = False)
     rules.add_field(name = '🤨 Liar Guess', value = '''
 Mind game with one! [lg <@p1> <@p2> <@p3>]
-```➕ Raise 🛑 Hold ❌ Fold 💵ALL IN!```
+```➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!```
 ''', inline = False)
     rules.add_field(name = '🎭 Blackjack', value = 'Classic! [bj <@p1> <@p2>]', inline = False)
     rules.add_field(name = '💎 Texas Poker', value = 'Stack chips! [tp <@p1> <@p2> <@p3>] UC', inline = False)
@@ -376,6 +376,7 @@ Each person has 10 fame.
                         await message.send('{} added 1 fame to the fame pool 😬!'.format(firstName))
                 elif str(reaction) == hold:
                     hold1 = True
+                    fold1 = True
                     await message.send('{} holded 🥺!'.format(firstName))
                 elif str(reaction) == fold:
                     hold1 = True
@@ -414,6 +415,7 @@ Each person has 10 fame.
                         await message.send('{} added 1 fame to the fame pool 😬!'.format(secondName))
                 elif str(reaction) == hold:
                     hold2 = True
+                    fold2 = True
                     await message.send('{} holded 🥺!'.format(secondName))
                 elif str(reaction) == fold:
                     hold2 = True
@@ -452,6 +454,7 @@ Each person has 10 fame.
                         await message.send('{} added 1 fame to the fame pool 😬!'.format(thirdName))
                 elif str(reaction) == hold:
                     hold3 = True
+                    fold3 = True
                     await message.send('{} holded 🥺!'.format(thirdName))
                 elif str(reaction) == fold:
                     hold3 = True
@@ -469,11 +472,30 @@ Each person has 10 fame.
 
     await message.send('Getting result... Please standby... 🤓')
     await asyncio.sleep(2)
-    await message.send("{}'s card is {} {}.\n{}'s card is {} {}.\n{}'s card is {} {}.".format(firstName, result_card_pattern1, result_card_no1, secondName, result_card_pattern2, result_card_no2, thirdName, result_card_pattern3, result_card_no3))
+    await message.send("{}'s card is {} {}.\n{}'s card is {} {}.\n{}'s card is {} {}.".format(firstName.mention, result_card_pattern1, result_card_no1, secondName.mention, result_card_pattern2, result_card_no2, thirdName.mention, result_card_pattern3, result_card_no3))
     await asyncio.sleep(2)
     await message.send('So, the winner who have {} fame is ...🥁'.format(famepool))
-    await asyncio.sleep(2)
-    await message.send('You see it yourself 🤪.')
+    await asyncio.sleep(4)
+
+# Result Logic
+    'Diamond 2' < 'Diamond 3' < 'Diamond 4' < 'Diamond 5' < 'Diamond 6' < 'Diamond 7' < 'Diamond 8' < 'Diamond 9' < 'Diamond 10' < 'Diamond J' < 'Diamond Q' < 'Diamond K' < 'Diamond A' < 'Club 2' < 'Club 3' < 'Club 4' < 'Club 5' < 'Club 6' < 'Club 7' < 'Club 8' < 'Club 9' < 'Club 10' < 'Club J' < 'Club Q' < 'Club K' < 'Club A' < 'Heart 2' < 'Heart 3' < 'Heart 4' < 'Heart 5' < 'Heart 6' < 'Heart 7' < 'Heart 8' < 'Heart 9' < 'Heart 10' < 'Heart J' < 'Heart Q' < 'Heart K' < 'Heart A' < 'Spade 2' < 'Spade 3' < 'Spade 4' < 'Spade 5' < 'Spade 6' < 'Spade 7' < 'Spade 8' < 'Spade 9' < 'Spade 10' < 'Spade J' < 'Spade Q' < 'Spade K' < 'Spade A'
+    a = (result_card_pattern1[0] + ' ' + (result_card_no1[0]))
+    b = (result_card_pattern2[0] + ' ' + (result_card_no2[0]))
+    c = (result_card_pattern3[0] + ' ' + (result_card_no3[0]))
+    if a < b < c:
+        await message.send('{} 🤯!'.format(thirdName.mention))
+    elif b < a < c:
+        await message.send('{} 🤯!'.format(thirdName.mention))
+    elif a < c < b:
+        await message.send('{} 🤗!'.format(secondName.mention))
+    elif c < a < b:
+        await message.send('{} 🤗!'.format(secondName.mention))
+    elif b < c < a:
+        await message.send('{} 😱!'.format(firstName.mention))
+    elif c < b < a:
+        await message.send('{} 😱!'.format(firstName.mention))
+    else:
+        await message.send('Hmm, seems that there is duplication. Well, nobody cares 😴!')
 
 
 # Blackjack for two
