@@ -554,6 +554,7 @@ async def blackjack2(message, firstName: discord.Member, secondName: discord.Mem
                 hold1 = True
                 await message.send('{} holded for dear life 🥶!'.format(firstName))
         except asyncio.TimeoutError:
+            hold1 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Second player
@@ -576,6 +577,7 @@ async def blackjack2(message, firstName: discord.Member, secondName: discord.Mem
                 hold2 = True
                 await message.send('{} holded for dear life 🥶!'.format(secondName))
         except asyncio.TimeoutError:
+            hold2 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Result first player
@@ -671,6 +673,7 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
                 hold1 = True
                 await message.send('{} holded for dear life 🥶!'.format(firstName))
         except asyncio.TimeoutError:
+            hold1 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Second player
@@ -693,6 +696,7 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
                 hold2 = True
                 await message.send('{} holded for dear life 🥶!'.format(secondName))
         except asyncio.TimeoutError:
+            hold2 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Third player
@@ -715,6 +719,7 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
                 hold3 = True
                 await message.send('{} holded for dear life 🥶!'.format(thirdName))
         except asyncio.TimeoutError:
+            hold3 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Result first player
@@ -833,6 +838,7 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
                 hold1 = True
                 await message.send('{} holded for dear life 🥶!'.format(firstName))
         except asyncio.TimeoutError:
+            hold1 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Second player
@@ -855,6 +861,7 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
                 hold2 = True
                 await message.send('{} holded for dear life 🥶!'.format(secondName))
         except asyncio.TimeoutError:
+            hold2 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Third player
@@ -877,6 +884,7 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
                 hold3 = True
                 await message.send('{} holded for dear life 🥶!'.format(thirdName))
         except asyncio.TimeoutError:
+            hold3 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Fourth player
@@ -899,6 +907,7 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
                 hold4 = True
                 await message.send('{} holded for dear life 🥶!'.format(fourthName))
         except asyncio.TimeoutError:
+            hold4 = True
             await message.send("Why da heck you are not reacting 🤬?!")
 
 # Result first player
