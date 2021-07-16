@@ -580,12 +580,12 @@ async def blackjack2(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result first player
     if 11 in hand1:
-        if sum(hand1) < 21:
+        if sum(hand1) > 21:
             for n, i in enumerate(hand1):
                 if i == 11:
                     hand1[n] = 1
                     x = sum(hand1)
-        elif sum(hand1) >= 21:
+        elif sum(hand1) <= 21:
             x = sum(hand1)
     elif 11 not in hand1:
         x = sum(hand1)
@@ -600,12 +600,12 @@ async def blackjack2(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result second player
     if 11 in hand2:
-        if sum(hand2) < 21:
+        if sum(hand2) > 21:
             for n, i in enumerate(hand2):
                 if i == 11:
                     hand2[n] = 1
                     x = sum(hand2)
-        elif sum(hand2) >= 21:
+        elif sum(hand2) <= 21:
             x = sum(hand2)
     elif 11 not in hand2:
         x = sum(hand2)
@@ -719,12 +719,12 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result first player
     if 11 in hand1:
-        if sum(hand1) < 21:
+        if sum(hand1) > 21:
             for n, i in enumerate(hand1):
                 if i == 11:
                     hand1[n] = 1
                     x = sum(hand1)
-        elif sum(hand1) >= 21:
+        elif sum(hand1) <= 21:
             x = sum(hand1)
     elif 11 not in hand1:
         x = sum(hand1)
@@ -739,12 +739,12 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result second player
     if 11 in hand2:
-        if sum(hand2) < 21:
+        if sum(hand2) > 21:
             for n, i in enumerate(hand2):
                 if i == 11:
                     hand2[n] = 1
                     x = sum(hand2)
-        elif sum(hand2) >= 21:
+        elif sum(hand2) <= 21:
             x = sum(hand2)
     elif 11 not in hand2:
         x = sum(hand2)
@@ -759,12 +759,12 @@ async def blackjack3(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result third player
     if 11 in hand3:
-        if sum(hand3) < 21:
+        if sum(hand3) > 21:
             for n, i in enumerate(hand3):
                 if i == 11:
                     hand3[n] = 1
                     x = sum(hand3)
-        elif sum(hand3) >= 21:
+        elif sum(hand3) <= 21:
             x = sum(hand3)
     elif 11 not in hand3:
         x = sum(hand3)
@@ -903,12 +903,12 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result first player
     if 11 in hand1:
-        if sum(hand1) < 21:
+        if sum(hand1) > 21:
             for n, i in enumerate(hand1):
                 if i == 11:
                     hand1[n] = 1
                     x = sum(hand1)
-        elif sum(hand1) >= 21:
+        elif sum(hand1) <= 21:
             x = sum(hand1)
     elif 11 not in hand1:
         x = sum(hand1)
@@ -923,12 +923,12 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result second player
     if 11 in hand2:
-        if sum(hand2) < 21:
+        if sum(hand2) > 21:
             for n, i in enumerate(hand2):
                 if i == 11:
                     hand2[n] = 1
                     x = sum(hand2)
-        elif sum(hand2) >= 21:
+        elif sum(hand2) <= 21:
             x = sum(hand2)
     elif 11 not in hand2:
         x = sum(hand2)
@@ -943,12 +943,12 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
 
 # Result third player
     if 11 in hand3:
-        if sum(hand3) < 21:
+        if sum(hand3) > 21:
             for n, i in enumerate(hand3):
                 if i == 11:
                     hand3[n] = 1
                     x = sum(hand3)
-        elif sum(hand3) >= 21:
+        elif sum(hand3) <= 21:
             x = sum(hand3)
     elif 11 not in hand3:
         x = sum(hand3)
@@ -961,14 +961,14 @@ async def blackjack4(message, firstName: discord.Member, secondName: discord.Mem
         if sum(hand3) <= 21:
             await message.send("{} managed to get FIVE IN A ROW!!! 🙀".format(thirdName.mention))
 
-# Result third player
+# Result fourth player
     if 11 in hand4:
-        if sum(hand4) < 21:
+        if sum(hand4) > 21:
             for n, i in enumerate(hand4):
                 if i == 11:
                     hand4[n] = 1
                     x = sum(hand4)
-        elif sum(hand4) >= 21:
+        elif sum(hand4) <= 21:
             x = sum(hand4)
     elif 11 not in hand4:
         x = sum(hand4)
