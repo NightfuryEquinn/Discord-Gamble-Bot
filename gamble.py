@@ -411,12 +411,16 @@ async def texaspoker(message, *name: discord.Member):
         foldc.append(False)
 
 # Send card to players
+    handlist = []
     for player in players:
         hand = []
         for i in range(0, 2):
             a = random.choice(deck)
             deck.remove(a)
             hand.append(a)
+        handlist.append(player)
+        for i in hand:
+            handlist.append(i)
         await player.send('Here is your card in hand.\n{}'.format(hand))
     
     await asyncio.sleep(5)
@@ -580,7 +584,7 @@ async def texaspoker(message, *name: discord.Member):
 
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
     await asyncio.sleep(3)
-    await message.send('Result see it yourself. Scoring system yet to be coded 🙏.')
+    await message.send('Here is the card distributed 🙏.\n{}'.format(handlist))
 
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
