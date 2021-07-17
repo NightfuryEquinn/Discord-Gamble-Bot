@@ -440,7 +440,7 @@ async def texaspoker(message, *name: discord.Member):
     while all(holdc) == False:
         for player in players:
             if foldc[players.index(player)] == False:
-                m = await message.send("{}'s turn. What's your move? 🤠".format(player))
+                m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                 await m.add_reaction(add)
                 await m.add_reaction(hold)
                 await m.add_reaction(fold)
@@ -493,7 +493,7 @@ async def texaspoker(message, *name: discord.Member):
     while all(holdc) == False:
         for player in players:
             if foldc[players.index(player)] == False:
-                m = await message.send("{}'s turn. What's your move? 🤠".format(player))
+                m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                 await m.add_reaction(add)
                 await m.add_reaction(hold)
                 await m.add_reaction(fold)
@@ -546,7 +546,7 @@ async def texaspoker(message, *name: discord.Member):
     while all(holdc) == False:
         for player in players:
             if foldc[players.index(player)] == False:
-                m = await message.send("{}'s turn. What's your move? 🤠".format(player))
+                m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                 await m.add_reaction(add)
                 await m.add_reaction(hold)
                 await m.add_reaction(fold)
