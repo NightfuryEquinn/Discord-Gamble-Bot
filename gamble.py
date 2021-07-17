@@ -45,9 +45,7 @@ For three. [lg <@p1> <@p2> <@p3>]
 ''', inline = False)
     rules.add_field(name = '🎭 Blackjack', value = '''
 Classic! 
-For two. [bj2 <@p1> <@p2>]
-For three. [bj3 <@p1> <@p2> <@p3>]
-For four. [bj4 <@p1> <@p2> <@p3> <@p4>]
+[bj <@p1> <@p2> ... unlimited!!!]
 ```🎴 Hit 🛑 Hold```    
     ''', inline = False)
     rules.add_field(name = '💎 Texas Poker', value = 'Stack chips! [tp <@p1> <@p2> <@p3>] UC', inline = False)
@@ -507,9 +505,9 @@ Each person has 10 fame.
 
 # Blackjack for two
 @bot.command(aliases = ['bj'])
-async def blackjack2(message, *name: discord.Member):
+async def blackjack(message, *name: discord.Member):
     hit = '🎴'
-    hold = '🛑'
+    holdc = '🛑'
     
     deck = [11, 11, 11, 11, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10]
     random.shuffle(deck)
@@ -528,13 +526,14 @@ async def blackjack2(message, *name: discord.Member):
         await message.send('Look around. Although you cannot see 😶. Be prepared. One at a time.')
         await asyncio.sleep(2)
 
+        hold = False
         while hold == False:
             m = await message.send("{}'s turn.".format(player.mention))
             await m.add_reaction(hit)
-            await m.add_reaction(hold)
+            await m.add_reaction(holdc)
 
             def valid(reaction, user):
-                return user == player and str(reaction) in [hit, hold]
+                return user == player and str(reaction) in [hit, holdc]
 
             try:
                 reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid)
@@ -543,7 +542,7 @@ async def blackjack2(message, *name: discord.Member):
                     deck.remove(card)
                     hands.append(card)
                     await player.send("Here is your card in hand.\n```{}```".format(hands))
-                elif str(reaction) == hold:
+                elif str(reaction) == holdc:
                     hold = True
                     if 11 in hands:
                         if sum(hands) > 21:
@@ -557,22 +556,30 @@ async def blackjack2(message, *name: discord.Member):
                         x = sum(hands)
 
                     if hands[0] == 11 and hands[1] == 11:
-                        result.append('```{} got DOUBLE ACES with total of {} 😳.```\n'.format(player, x))
+                        result.append('```{} got DOUBLE ACES with total of {} 😳.\n```'.format(player, x))
 
                     if len(hands) == 5:
-                        result.append('```{} tried to get five but exploded 🤯.```\n'.format(player))
+                        result.append('```{} tried to get five but exploded 🤯.\n```'.format(player))
                         if sum(hands) <= 21:
-                            result.append('```{} got FIVE IN A ROW!!! with total of {} 🙀.```\n'.format(player, x))
+                            result.append('```{} got FIVE IN A ROW!!! with total of {} 🙀.\n```'.format(player, x))
                     
-                    result.append('```{} got a total of {} 🥶.```\n'.format(player, x))
+                    result.append('```{} got a total of {} 🥶.\n```'.format(player, x))
             except asyncio.TimeoutError:
                 hold = True
-                result.append('```{} is forfeited. USELESSSS.```\n'.format(player))
+                result.append('```{} is forfeited. USELESSSS.\n```'.format(player))
                 await message.send("Why da heck you are not reacting 🤬?!")
 
     await message.send('Finalizing result... 🤓')
     await asyncio.sleep(5)
-    await message.send(result)
+    for i in result:
+        await message.send(i)
+
+
+# Texas Poker
+@bot.command(aliases = ['tp'])
+async def texaspoker(message, *name: discord.Member):
+    await message.send('None')
+
 
 
 
