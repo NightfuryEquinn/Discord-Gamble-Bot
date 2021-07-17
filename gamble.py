@@ -392,10 +392,10 @@ async def texaspoker(message, *name: discord.Member):
     famepool = len(name)
 
     deck = [
-'♦️A', '♦️2', '♦️3', '♦️4', '♦️5', '♦️6', '♦️7', '♦️8', '♦️9', '♦️10', '♦️J', '♦️Q', '♦️K', 
-'♣️A', '♣️2', '♣️3', '♣️4', '♣️5', '♣️6', '♣️7', '♣️8', '♣️9', '♣️10', '♣️J', '♣️Q', '♣️K', 
-'♥️A', '♥️2', '♥️3', '♥️4', '♥️5', '♥️6', '♥️7', '♥️8', '♥️9', '♥️10', '♥️J', '♥️Q', '♥️K', 
-'♠️A', '♠️2', '♠️3', '♠️4', '♠️5', '♠️6', '♠️7', '♠️8', '♠️9', '♠️10', '♠️J', '♠️Q', '♠️K'
+'♦️ A', '♦️ 2', '♦️ 3', '♦️ 4', '♦️ 5', '♦️ 6', '♦️ 7', '♦️ 8', '♦️ 9', '♦️ 10', '♦️ J', '♦️ Q', '♦️ K', 
+'♣️ A', '♣️ 2', '♣️ 3', '♣️ 4', '♣️ 5', '♣️ 6', '♣️ 7', '♣️ 8', '♣️ 9', '♣️ 10', '♣️ J', '♣️ Q', '♣️ K', 
+'♥️ A', '♥️ 2', '♥️ 3', '♥️ 4', '♥️ 5', '♥️ 6', '♥️ 7', '♥️ 8', '♥️ 9', '♥️ 10', '♥️ J', '♥️ Q', '♥️ K', 
+'♠️ A', '♠️ 2', '♠️ 3', '♠️ 4', '♠️ 5', '♠️ 6', '♠️ 7', '♠️ 8', '♠️ 9', '♠️ 10', '♠️ J', '♠️ Q', '♠️ K'
 ]
     random.shuffle(deck)
 
@@ -414,7 +414,7 @@ async def texaspoker(message, *name: discord.Member):
             a = random.choice(deck)
             deck.remove(a)
             hand.append(a)
-        await player.send('Here is your card in hand.\n```{}```'.format(hand))
+        await player.send('Here is your card in hand.\n{}'.format(hand))
     
     await asyncio.sleep(5)
     await message.send('Cards have been distributed! 😏 Shuffling...')
@@ -430,25 +430,35 @@ async def texaspoker(message, *name: discord.Member):
             dealer = random.choice(deck)
             deck.remove(dealer)
 
-    await message.send('Dealer Hand Cards 😎\n```{}```'.format(dealer_hand))
+    await message.send('Dealer Hand Cards 😎\n{}'.format(dealer_hand))
 
 # PLayer turn
-    for player in players:
-        def valid(reaction, user):
-            return user == player and str(reaction) in [add, hold, fold, all_in]
-        
-        try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 45.0, check = valid)
-            if str(reaction) == add:
-                await message.send('{} raised.'.format(player.mention))
-            elif str(reaction) == hold:
-                await message.send('{} holded.'.format(player.mention))
-            elif str(reaction) == fold:
-                await message.send('{} folded. Sad.'.format(player.mention))
-            elif str(reaction) == all_in:
-                await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
-        except asyncio.TimeoutError:
-            await message.send('{} did not respond! Out you go 👺.'.format(player))
+    while all(players) == True:
+        for player in players:
+            m = await message.send("{}'s turn. What's your move? 🤠".format(player))
+            await m.add_reaction(add)
+            await m.add_reaction(hold)
+            await m.add_reaction(fold)
+            await m.add_reaction(all_in)
+
+            def valid(reaction, user):
+                return user == player and str(reaction) in [add, hold, fold, all_in]
+            
+            try:
+                reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid)
+                if str(reaction) == add:
+                    await message.send('{} raised.'.format(player.mention))
+                elif str(reaction) == hold:
+                    player = True
+                    await message.send('{} holded.'.format(player.mention))
+                elif str(reaction) == fold:
+                    player = True
+                    await message.send('{} folded. Sad.'.format(player.mention))
+                elif str(reaction) == all_in:
+                    player = True
+                    await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
+            except asyncio.TimeoutError:
+                await message.send('{} did not respond! Out you go 👺.'.format(player))
  
         
 
