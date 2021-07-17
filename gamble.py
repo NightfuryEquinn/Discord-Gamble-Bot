@@ -458,6 +458,7 @@ async def texaspoker(message, *name: discord.Member):
                     player = True
                     await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
             except asyncio.TimeoutError:
+                player = True
                 await message.send('{} did not respond! Out you go 👺.'.format(player))
  
         
