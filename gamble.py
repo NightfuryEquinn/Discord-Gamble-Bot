@@ -418,7 +418,7 @@ async def texaspoker(message, *name: discord.Member):
             a = random.choice(deck)
             deck.remove(a)
             hand.append(a)
-        handlist.append(player)
+        handlist.append(player.name)
         for i in hand:
             handlist.append(i)
         await player.send('Here is your card in hand.\n{}'.format(hand))
