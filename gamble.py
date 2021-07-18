@@ -423,18 +423,16 @@ async def texaspoker(message, *name: discord.Member):
     await asyncio.sleep(2)
 
 # Round Loop
-    while pool < 4:
-        pool = 1
-        fame = []
-        foldc = []
-        if pool == 1:
-            for player in players:
-                fame.append(10)
-                foldc.append(False)
-        else:
-            pass
+    pool = 1
 
-        dealer_hand = []
+    dealer_hand = []
+    fame = []
+    foldc = []
+    for player in players:
+        fame.append(10)
+        foldc.append(False)
+
+    while pool < 4:
         if pool == 1:
             await message.send("ROUND ONE 1️⃣")
             
@@ -460,17 +458,17 @@ async def texaspoker(message, *name: discord.Member):
                 elif i % 2 == 0:
                     dealer = random.choice(deck)
                     deck.remove(dealer)
-                    dealer_hand.append(dealer)
 
         await message.send('Cards on Table 😎\n{}'.format(dealer_hand))
         await asyncio.sleep(2)
 
+        holdc = []
+        for player in players:
+            holdc.append(False)
         while all(holdc) == False:
-            holdc = []
             for player in players:
-                holdc.append(False)
-            for player in players:
-                if foldc[players.index(player)] == False:
+                x = players.index(player)
+                if foldc[x] == False:
                     m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                     await m.add_reaction(add)
                     await m.add_reaction(hold)
@@ -482,7 +480,7 @@ async def texaspoker(message, *name: discord.Member):
                     
                     try:
                         reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid)
-                        x = players.index(player)
+                        
                         if str(reaction) == add:
                             if fame[x] == 0:
                                 await message.send('Bruh, you do not have any fame left. Consider giving your clothes?')
@@ -517,6 +515,7 @@ async def texaspoker(message, *name: discord.Member):
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
     await asyncio.sleep(3)
     await message.send("Player's card. \n{}".format(handlist))
+    await message.send("Dealer's card. \n{}".format(dealer_hand))
     await message.send('''
 For your information, the scoring table.
 Dragon 🐉 [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♦️ 4 ♣️ 4 ♥️ 4 etc.] Any combinations that occupied all seven cards
