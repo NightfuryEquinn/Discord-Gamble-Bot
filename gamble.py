@@ -466,9 +466,9 @@ async def texaspoker(message, *name: discord.Member):
         for player in players:
             holdc.append(False)
 
-        x = players.index(player)
         while all(holdc) == False:
             for player in players:
+                x = players.index(player)
                 if foldc[x] == False:
                     m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                     await m.add_reaction(add)
@@ -511,7 +511,9 @@ async def texaspoker(message, *name: discord.Member):
                         holdc[x] = True
                         await message.send('{} did not respond! Out you go 👺.'.format(player))
                 elif foldc[x] == True:
+                    holdc[x] = True
                     await message.send('You folded. So just be patient, Mr/Mrs {}.'.format(player.mention))
+                    
         pool = pool + 1 
 
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
