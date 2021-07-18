@@ -517,6 +517,18 @@ async def texaspoker(message, *name: discord.Member):
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
     await asyncio.sleep(3)
     await message.send("Player's card. \n{}".format(handlist))
+    await message.send('''
+For your information, the scoring table.
+Dragon 🐉 [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♦️ 4 ♣️ 4 ♥️ 4 etc.] Any combinations that occupied all seven cards
+Royal Flush 👑 [♠️ 10 ♠️ J ♠️ Q ♠️ K ♠️ A]
+Straight Flush ⏩ [♦️ 5 ♦️ 6 ♦️ 7 ♦️ 8 ♦️ 9]
+Straight ➡️ [♣️ 6 ♦️ 7 ♠️ 8 ♦️ 9 ♥️ 10]
+Flush 🔁 [♦️ 5 ♦️ 3 ♦️ 8 ♦️ J ♦️ Q]
+Fours 4️⃣ [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6]
+Three of a Kind 3️⃣ [♦️ 4 ♣️ 4 ♥️ 4]
+Double Pair 2️⃣ [♦️ A ♣️ A | ♦️ 2 ♥️ 2]
+Single Pair 1️⃣ [♦️ A ♣️ A]
+''')
 
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
