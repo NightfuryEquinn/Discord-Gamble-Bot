@@ -423,8 +423,8 @@ async def texaspoker(message, *name: discord.Member):
     await asyncio.sleep(2)
 
 # Round Loop
-    while all(holdc) == False:
-        pool = 1
+    pool = 1
+    while pool < 4:
         fame = []
         holdc = []
         foldc = []
@@ -467,47 +467,48 @@ async def texaspoker(message, *name: discord.Member):
         await message.send('Cards on Table 😎\n{}'.format(dealer_hand))
         await asyncio.sleep(2)
 
-        for player in players:
-            if foldc[players.index(player)] == False:
-                m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
-                await m.add_reaction(add)
-                await m.add_reaction(hold)
-                await m.add_reaction(fold)
-                await m.add_reaction(all_in)
+        while all(holdc) == False:
+            for player in players:
+                if foldc[players.index(player)] == False:
+                    m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
+                    await m.add_reaction(add)
+                    await m.add_reaction(hold)
+                    await m.add_reaction(fold)
+                    await m.add_reaction(all_in)
 
-                def valid(reaction, user):
-                    return user == player and str(reaction) in [add, hold, fold, all_in]
-                
-                try:
-                    reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid)
-                    x = players.index(player)
-                    if str(reaction) == add:
-                        if fame[x] == 0:
-                            await message.send('Bruh, you do not have any fame left. Consider giving your clothes?')
-                        else:
-                            fame[x] = fame[x] - 1
-                            famepool = famepool + 1
-                            await message.send('{} raised. {} left.'.format(player.mention, fame[x]))
-                    elif str(reaction) == hold:
-                        if holdc[x] == True:
-                            pass
-                        else:
+                    def valid(reaction, user):
+                        return user == player and str(reaction) in [add, hold, fold, all_in]
+                    
+                    try:
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid)
+                        x = players.index(player)
+                        if str(reaction) == add:
+                            if fame[x] == 0:
+                                await message.send('Bruh, you do not have any fame left. Consider giving your clothes?')
+                            else:
+                                fame[x] = fame[x] - 1
+                                famepool = famepool + 1
+                                await message.send('{} raised. {} left.'.format(player.mention, fame[x]))
+                        elif str(reaction) == hold:
+                            if holdc[x] == True:
+                                pass
+                            else:
+                                holdc[x] = True
+                                await message.send('{} holded.'.format(player.mention))
+                        elif str(reaction) == fold:
                             holdc[x] = True
-                            await message.send('{} holded.'.format(player.mention))
-                    elif str(reaction) == fold:
+                            foldc[x] = True
+                            await message.send('{} folded. Sad.'.format(player.mention))
+                        elif str(reaction) == all_in:
+                            holdc[x] = True
+                            foldc[x] = True
+                            fame[x] = fame[x] - 10
+                            famepool = famepool + 10
+                            await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
+                    except asyncio.TimeoutError:
                         holdc[x] = True
                         foldc[x] = True
-                        await message.send('{} folded. Sad.'.format(player.mention))
-                    elif str(reaction) == all_in:
-                        holdc[x] = True
-                        foldc[x] = True
-                        fame[x] = fame[x] - 10
-                        famepool = famepool + 10
-                        await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
-                except asyncio.TimeoutError:
-                    holdc[x] = True
-                    foldc[x] = True
-                    await message.send('{} did not respond! Out you go 👺.'.format(player))
+                        await message.send('{} did not respond! Out you go 👺.'.format(player))
         pool = pool + 1
 
  
