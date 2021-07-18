@@ -423,15 +423,13 @@ async def texaspoker(message, *name: discord.Member):
     await asyncio.sleep(2)
 
 # Round Loop
-    pool = 1
     while pool < 4:
+        pool = 1
         fame = []
-        holdc = []
         foldc = []
         if pool == 1:
             for player in players:
                 fame.append(10)
-                holdc.append(False)
                 foldc.append(False)
         else:
             pass
@@ -468,6 +466,9 @@ async def texaspoker(message, *name: discord.Member):
         await asyncio.sleep(2)
 
         while all(holdc) == False:
+            holdc = []
+            for player in players:
+                holdc.append(False)
             for player in players:
                 if foldc[players.index(player)] == False:
                     m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
