@@ -508,9 +508,7 @@ async def texaspoker(message, *name: discord.Member):
                         holdc[x] = True
                         foldc[x] = True
                         await message.send('{} did not respond! Out you go 👺.'.format(player))
-        pool = pool + 1
-
- 
+        pool = pool + 1 
 
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
     await asyncio.sleep(3)
