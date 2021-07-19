@@ -535,34 +535,7 @@ async def texaspoker(message, *name: discord.Member):
     await message.send("Player's card. \n{}".format(handlist))
     await message.send("Dealer's card. \n{}".format(dealer_hand))
 
-    for player in players:
-        pattern = ['♦️ ', '♣️ ', '♥️ ', '♠️ ']
-        tempcheck = []
-        filtercheck = []
-
-        filtercheck.append(checkhandlist[0])
-        filtercheck.append(checkhandlist[1])
-        filtercheck = filtercheck + dealer_hand
-        checkhandlist.remove(checkhandlist[0])
-        checkhandlist.remove(checkhandlist[1])   
-
-# Check for double, three, four   
-        for j in pattern:
-            for i in filtercheck:
-                i = i.replace(j, '')
-                tempcheck.append(i)
-        rearrange = set(tempcheck)
-        for i in rearrange:
-            x = tempcheck.count(i)
-            if x == 2:
-                await message.send('{} got a DOUBLE!'.format(player))
-            elif x == 3:
-                await message.send('{} got THREE OF A KIND!!'.format(player))
-            elif x == 4:
-                await message.send('{} got ALL FOUR!!!'.format(player))
-
-
-
+    
 
 
 
