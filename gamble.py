@@ -539,10 +539,14 @@ async def texaspoker(message, *name: discord.Member):
         pattern = ['♦️ ', '♣️ ', '♥️ ', '♠️ ']
         tempcheck = []
         filtercheck = []
-        filtercheck = dealer_hand + checkhandlist[0] + checkhandlist[1]
+
+        filtercheck.append(checkhandlist[0])
+        filtercheck.append(checkhandlist[1])
+        filtercheck = filtercheck + dealer_hand
         checkhandlist.remove(checkhandlist[0])
-        checkhandlist.remove(checkhandlist[1])     
-        # Check for double, three, four   
+        checkhandlist.remove(checkhandlist[1])   
+
+# Check for double, three, four   
         for j in pattern:
             for i in filtercheck:
                 i = i.replace(j, '')
