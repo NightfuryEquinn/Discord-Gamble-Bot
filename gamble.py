@@ -47,6 +47,18 @@ Classic!
 Stack chips! 
 [tp <@p1> <@p2> ... unlimited!!!]
 ```➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!```
+```
+For your information, the scoring table.
+Dragon 🐉 [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♦️ 4 ♣️ 4 ♥️ 4 etc.] Any combinations that occupied all seven cards
+Royal Flush 👑 [♠️ 10 ♠️ J ♠️ Q ♠️ K ♠️ A]
+Straight Flush ⏩ [♦️ 5 ♦️ 6 ♦️ 7 ♦️ 8 ♦️ 9]
+Straight ➡️ [♣️ 6 ♦️ 7 ♠️ 8 ♦️ 9 ♥️ 10]
+Flush 🔁 [♦️ 5 ♦️ 3 ♦️ 8 ♦️ J ♦️ Q]
+Fours 4️⃣ [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6]
+Three of a Kind 3️⃣ [♦️ 4 ♣️ 4 ♥️ 4]
+Double Pair 2️⃣ [♦️ A ♣️ A | ♦️ 2 ♥️ 2]
+Single Pair 1️⃣ [♦️ A ♣️ A]
+```
 ''', inline = False)
     rules.add_field(name = '🃏 Landlord', value = 'Legendary card game! [ll <@p1> <@p2> <@p3> <@p4> UC', inline = False)
     await message.send(embed = rules)
@@ -407,6 +419,7 @@ async def texaspoker(message, *name: discord.Member):
 
 # Send card to players
     handlist = []
+    checkhandlist = []
     for player in players:
         hand = []
         for i in range(0, 2):
@@ -416,6 +429,7 @@ async def texaspoker(message, *name: discord.Member):
         handlist.append(player.name)
         for i in hand:
             handlist.append(i)
+            checkhandlist.append(i)
         await player.send('Here is your card in hand.\n{}'.format(hand))
     
     await asyncio.sleep(5)
@@ -520,20 +534,33 @@ async def texaspoker(message, *name: discord.Member):
     await asyncio.sleep(3)
     await message.send("Player's card. \n{}".format(handlist))
     await message.send("Dealer's card. \n{}".format(dealer_hand))
-    await message.send('''
-```
-For your information, the scoring table.
-Dragon 🐉 [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♦️ 4 ♣️ 4 ♥️ 4 etc.] Any combinations that occupied all seven cards
-Royal Flush 👑 [♠️ 10 ♠️ J ♠️ Q ♠️ K ♠️ A]
-Straight Flush ⏩ [♦️ 5 ♦️ 6 ♦️ 7 ♦️ 8 ♦️ 9]
-Straight ➡️ [♣️ 6 ♦️ 7 ♠️ 8 ♦️ 9 ♥️ 10]
-Flush 🔁 [♦️ 5 ♦️ 3 ♦️ 8 ♦️ J ♦️ Q]
-Fours 4️⃣ [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6]
-Three of a Kind 3️⃣ [♦️ 4 ♣️ 4 ♥️ 4]
-Double Pair 2️⃣ [♦️ A ♣️ A | ♦️ 2 ♥️ 2]
-Single Pair 1️⃣ [♦️ A ♣️ A]
-```
-''')
+
+    for player in players:
+        pattern = ['♦️ ', '♣️ ', '♥️ ', '♠️ ']
+        tempcheck = []
+        filtercheck = []
+        filtercheck = dealer_hand + checkhandlist[0] + checkhandlist[1]
+        checkhandlist.remove(checkhandlist[0])
+        checkhandlist.remove(checkhandlist[1])     
+        # Check for double, three, four   
+        for j in pattern:
+            for i in filtercheck:
+                i = i.replace(j, '')
+                tempcheck.append(i)
+        rearrange = set(tempcheck)
+        for i in rearrange:
+            x = tempcheck.count(i)
+            if x == 2:
+                await message.send('{} got a DOUBLE!'.format(player))
+            elif x == 3:
+                await message.send('{} got THREE OF A KIND!!'.format(player))
+            elif x == 4:
+                await message.send('{} got ALL FOUR!!!'.format(player))
+
+
+
+
+
 
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
