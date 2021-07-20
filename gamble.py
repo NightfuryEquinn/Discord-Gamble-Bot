@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 from random import choices
 import asyncio
+import os
 
 bot = commands.Bot(command_prefix = 'gb ')
 
@@ -45,6 +46,7 @@ Classic!
 ''', inline = False)
     rules.add_field(name = '💎 Texas Poker', value = '''
 Stack chips! 
+Only all players holded will proceed second round.
 [tp <@p1> <@p2> ... unlimited!!!]
 ```➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!```
 ```
@@ -172,10 +174,8 @@ async def guess(message, firstName: discord.Member):
     result_card_no = random.choices(card_no, luck2, k = 1)
 
     m1 = await message.send('Guess my card pattern, human. Or shall I call you by your name, {}. Two chances.'.format(firstName))
-    await m1.add_reaction(diamond)
-    await m1.add_reaction(club)
-    await m1.add_reaction(heart)
-    await m1.add_reaction(spade)
+    for pattern_emoji in [diamond, club, heart, spade]:
+        await m1.add_reaction(pattern_emoji)
 
     def valid1(reaction, user):
         return user == firstName and str(reaction) in [diamond, club, heart, spade]
@@ -214,19 +214,8 @@ async def guess(message, firstName: discord.Member):
         await message.send('Hellooooo? Anybody thereeee? No? All your luck is mine now 👀. Do not leave yet!')
 
     m2 = await message.send('Guess my card number now. Prove to me you are worthy human, {}. Four chances.'.format(firstName))
-    await m2.add_reaction(two)
-    await m2.add_reaction(three)
-    await m2.add_reaction(four)
-    await m2.add_reaction(five)
-    await m2.add_reaction(six)
-    await m2.add_reaction(seven)
-    await m2.add_reaction(eight)
-    await m2.add_reaction(nine)
-    await m2.add_reaction(ten)
-    await m2.add_reaction(jack)
-    await m2.add_reaction(queen)
-    await m2.add_reaction(king)
-    await m2.add_reaction(ace)
+    for number_emoji in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]:
+        await m2.add_reaction(number_emoji)
 
     def valid2(reaction, user):
         return user == firstName and str(reaction) in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
@@ -419,7 +408,6 @@ async def texaspoker(message, *name: discord.Member):
 
 # Send card to players
     handlist = []
-    checkhandlist = []
     for player in players:
         hand = []
         for i in range(0, 2):
@@ -429,7 +417,6 @@ async def texaspoker(message, *name: discord.Member):
         handlist.append(player.name)
         for i in hand:
             handlist.append(i)
-            checkhandlist.append(i)
         await player.send('Here is your card in hand.\n{}'.format(hand))
     
     await asyncio.sleep(5)
@@ -498,7 +485,8 @@ async def texaspoker(message, *name: discord.Member):
                         
                         if str(reaction) == add:
                             if fame[x] == 0:
-                                await message.send('Bruh, you do not have any fame left. Consider giving your clothes? HOLD it please!')
+                                holdc[x] = True
+                                await message.send('Bruh, you do not have any fame left. Consider giving your clothes?')
                             else:
                                 fame[x] = fame[x] - 1
                                 famepool = famepool + 1
@@ -512,21 +500,25 @@ async def texaspoker(message, *name: discord.Member):
                         elif str(reaction) == fold:
                             holdc[x] = True
                             foldc[x] = True
+                            fame[x] = 0
                             await message.send('{} folded. Sad but no regrets eh?'.format(player.mention))
                         elif str(reaction) == all_in:
                             if fame[x] == 0:
-                                await message.send("I know you are rich, but just hold, will you?")
+                                holdc[x] = True
+                                await message.send("I know you are rich, but I will just hold you.")
                             else:
                                 holdc[x] = True
-                                fame[x] = fame[x] - 10
-                                famepool = famepool + 10
+                                famepool = famepool + fame[x]
+                                fame[x] = 0
                                 await message.send('{} ALL INNNNNN!!! 🤩'.format(player.mention))
                     except asyncio.TimeoutError:
+                        foldc[x] = True
                         holdc[x] = True
                         await message.send('{} did not respond! Out you go 👺.'.format(player))
                 elif foldc[x] == True:
                     holdc[x] = True
                     await message.send('You folded. So just be patient, Mr/Mrs {}.'.format(player.mention))
+                await asyncio.sleep(2)
                     
         pool = pool + 1 
 
@@ -534,10 +526,72 @@ async def texaspoker(message, *name: discord.Member):
     await asyncio.sleep(3)
     await message.send("Player's card. \n{}".format(handlist))
     await message.send("Dealer's card. \n{}".format(dealer_hand))
+    await asyncio.sleep(2)
+    await message.send("See for yourself the result. Dealer has ran away 🤡.")
 
     
+# Landlord for and only four
+@bot.command(aliases = ['ll'])
+async def landlord(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member, fourthName: discord.Member):
+    await message.send('This is a complicated game, so be prepared and understand the rules beforehand.')
+    await asyncio.sleep(5)
 
+    players = [firstName, secondName, thirdName, fourthName]
+    join = '✅'
+    cancel = '❎'
 
+    readym = await message.send('React accordingly totag to start the game ⌛️.')
+    for ready_emoji in [join, cancel]:
+        await readym.add_reaction(ready_emoji)
 
+    for player in players:
+        def valid(reaction, user):
+            return user == player and str(reaction) in [join, cancel]
+        
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
+            if str(reaction) == join:
+                await message.send('{} joined'.format(player))
+            elif str(reaction) == cancel:
+                await message.send('{} rejected'.format(player))
+                return
+        except asyncio.TimeoutError:
+            await message.send('Someone did not join.')
+            return
+
+    await asyncio.sleep(1)
+    await message.send('Game will start soon!')
+    await message.send('D = ♦️ Diamond, C = ♣️ Club, H = ♥️ Heart, S = ♠️ Spade')
+    await asyncio.sleep(10)
+    
+    deck = [
+'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'DJ', 'DQ', 'DK', 'DA', 'D2',
+'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'CJ', 'CQ', 'CK', 'CA', 'C2',
+'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'HJ', 'HQ', 'HK', 'HA', 'H2',
+'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'SJ', 'SQ', 'SK', 'SA', 'S2'
+]
+
+    firstName_card = []
+    secondName_card = []
+    thirdName_card = []
+    fourthName_card = []
+
+    for i in range (0, 13):
+        for playerhand in [firstName_card, secondName_card, thirdName_card, fourthName_card]:
+            random.shuffle(deck)
+            card = random.choice(deck)
+            playerhand.append(card)
+            deck.remove(card)
+
+    await message.send('Shuffling card and distributing ...')
+    await firstName.send('This is your card deck.\n```{}```'.format(firstName_card))
+    await secondName.send('This is your card deck.\n```{}```'.format(secondName_card))
+    await thirdName.send('This is your card deck.\n```{}```'.format(thirdName_card))
+    await fourthName.send('This is your card deck.\n```{}```'.format(fourthName_card))
+    await asyncio.sleep(10)
+
+    await message.send('🎲 GAME COMMENCED 🎲')
+
+        
 
 bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.lCDZaXLJezsle_grbeDb_JtOLa0')
