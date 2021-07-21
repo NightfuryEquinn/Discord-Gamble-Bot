@@ -47,6 +47,7 @@ Classic!
     rules.add_field(name = '💎 Texas Poker', value = '''
 Stack chips! 
 Only all players holded will proceed second round.
+Each player have 10 fames as chips 😌. 
 [tp <@p1> <@p2> ... unlimited!!!]
 ```➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!```
 ```
@@ -62,7 +63,16 @@ Double Pair 2️⃣ [♦️ A ♣️ A | ♦️ 2 ♥️ 2]
 Single Pair 1️⃣ [♦️ A ♣️ A]
 ```
 ''', inline = False)
-    rules.add_field(name = '🃏 Landlord', value = 'Legendary card game! [ll <@p1> <@p2> <@p3> <@p4> UC', inline = False)
+    rules.add_field(name = '🃏 Landlord', value = '''
+Legendary card game! 
+[ll <@p1> <@p2> <@p3> <@p4>]
+```
+✅ Join game ❎ Cancel game 👌 Agree 💩 Decline 
+1️⃣ Single 2️⃣ Double 3️⃣ Triple 4️⃣ Four 5️⃣ FIVE
+```
+With a twist of voting the card(s) played 😲. 
+Whoever empty the hand, wins 😎! 
+''', inline = False)
     await message.send(embed = rules)
 
 # Coinflip for one
@@ -620,7 +630,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
 
                             playcard = 0
                             try:
-                                reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid3)
+                                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid3)
                                 if str(reaction) == one:
                                     playcard = 1
                                 elif str(reaction) == two:
@@ -632,12 +642,13 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                                 elif str(reaction) == five:
                                     playcard = 5
                             except asyncio.TimeoutError:
-                                await message.send("OK! You don't react. Skip.")
+                                await message.send("OK! You don't react. Skip 😑.")
                                 y = 2
 
                             countcard = 0
                             while countcard != playcard:
-                                response = await bot.wait_for('message', timeout = 30.0, check = None)
+                                await message.send('Play your card one by one 😇.')
+                                response = await bot.wait_for('message', timeout = 120.0, check = None)
                                 if message.author.id == player.id:
                                     if response.content in playerhand:
                                         response_list.append(response.content)
@@ -646,12 +657,14 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                                         await message.send('Card not in your deck 😐.')
                                 elif message.author.id != player.id:
                                     await message.send('Not you. Have coffee ☕️? or Tea 🍵? Just wait la.')
+                            y = 1
                     except asyncio.TimeoutError:
-                        await message.send('Timeout. Loss your turn.')
+                        await message.send('Timeout. Loss your turn 😑.')
                         y = 2
 
                     if y == 1:
-                        agreem = await message.send("All agree to {}'s card?".format(player.name))
+                        await message.send('```{}```'.format(response_list))
+                        agreem = await message.send("All agree to {}'s card? 🤔".format(player.name))
                         for agree_emoji in [accept, decline]:
                             await agreem.add_reaction(agree_emoji)
 
@@ -660,7 +673,8 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                                 return user == player and str(reaction) in [accept, decline]
                         
                             try:
-                                reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = valid2)
+                                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid2)
+                                await message.send('{} agree or decline?'.format(player))
                                 if str(reaction) == accept:
                                     await message.send("{} agreed.".format(player.name))
                                 elif str(reaction) == decline:
