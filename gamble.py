@@ -173,7 +173,7 @@ color = random.choice(colors))
     while True:
         try:
             reaction, user = await bot.wait_for('reaction_add', timeout = 90.0, check = valid)
-            await message.remove_reaction(reaction, user)
+            await m.remove_reaction(reaction, user)
 
             if str(reaction) == left:
                 page = page - 1
@@ -185,15 +185,15 @@ color = random.choice(colors))
                     page = 1
 
             if page == 1:
-                await message.edit(embed = cf_rules)
+                await m.edit(embed = cf_rules)
             elif page == 2:
-                await message.edit(embed = gtbc_rules)
+                await m.edit(embed = gtbc_rules)
             elif page == 3:
-                await message.edit(embed = bj_rules)
+                await m.edit(embed = bj_rules)
             elif page == 4:
-                await message.edit(embed = tp_rules)
+                await m.edit(embed = tp_rules)
             elif page == 5:
-                await message.edit(embed = ll_rules)
+                await m.edit(embed = ll_rules)
         except asyncio.TimeoutError:
             await message.send('{} put the book back already. Take it out again if you want to read 😊.'.format(name))
             break
