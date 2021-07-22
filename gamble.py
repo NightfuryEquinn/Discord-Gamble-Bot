@@ -3,7 +3,6 @@ from discord.ext import commands
 import random
 from random import choices
 import asyncio
-import os
 
 bot = commands.Bot(command_prefix = 'gb ')
 
@@ -35,23 +34,85 @@ async def rules(message):
     name = message.author.name
     avatar = message.author.avatar_url
 
-    rules = discord.Embed(title = '{} is looking at the No-Currency-Gamble Rulebook'.format(name), description = 'There are no currency used, this bot uses your luck and unluck. Have fun! 😉', color = 0xf8f8ff)
-    rules.set_thumbnail(url = avatar)
-    rules.add_field(name = '💰 Coinflip', value = 'For one. [cfs]\nFor two. [cfd <@p1> <@p2>]', inline = False)
-    rules.add_field(name = '🤖 Guess The Bot Card', value = 'Versus Bot! [gs <@p1>]', inline = False)
-    rules.add_field(name = '🎭 Blackjack', value = '''
+    left = '◀️'
+    right = '▶️'
+    colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4, 0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
+
+# Coinflip Page
+    cf_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📔', 
+description = '''
+{} took the handbook from the bookshelf, reading 🤓.
+
+Chapter 1 - 💰 Coinflip
+
+Just a very basic and mundane coinflip game.
+You flip and wait 😶
+Why are you even reading this page?
+```
+gb cfs -- For one player
+gb cfd @p1 @p2 -- For two player
+```
+'''.format(name), 
+color = random.choice(colors))
+    cf_rules.set_thumbnail(url = avatar)
+
+# Guess the bot card Page
+    gtbc_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📕', 
+description = '''
+{} flipped to the second page, continue 🧐.
+
+Chapter 2 - 🤖 Guess The Bot Card
+
+Take on and challenge the bot in a guessing game.
+Round One -- Guess the pattern ✡️
+Round Two -- Guess the number 🧮
+May Homo Sapiens win! FIGHTING 🥳
+```
+gb gs @p1 -- One and only one player
+```
+'''.format(name), 
+color = random.choice(colors))
+    gtbc_rules.set_thumbnail(url = avatar)
+
+# Blackjack Page
+    bj_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📗', 
+description = '''
+{} is still reading ~ 🤫.
+
+Chapter 3 - 🎭 Blackjack
+
 Classic! 
-[bj <@p1> <@p2> ... unlimited!!!]
-```🎴 Hit 🛑 Hold```    
-''', inline = False)
-    rules.add_field(name = '💎 Texas Poker', value = '''
+Get 21 to win and don't explode yourself 💣
+Card given one at a time 😇. No hurries.
+```
+gb bj @p1 @... -- No limit of players
+🎴 Hit 🛑 Hold
+```    
+'''.format(name), 
+color = random.choice(colors))
+    bj_rules.set_thumbnail(avatar)
+
+# Texas Poker Page
+    tp_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📘',
+description = '''
+{} nearly finished reading, but not yet 😴
+
+Chapter 4 - 💎 Texas Poker
+
 Stack chips! 
 Only all players holded will proceed second round.
 Each player have 10 fames as chips 😌. 
-[tp <@p1> <@p2> ... unlimited!!!]
-```➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!```
+ACES is the boss, 2 is the servant here.
 ```
-For your information, the scoring table.
+gb tp @p1 @... -- No limit of players
+➕ Raise 🛑 Hold ❌ Fold 💵 ALL IN!
+```
+```
+SCORETABLE 💱 Largest to Smallest
 Dragon 🐉 [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♦️ 4 ♣️ 4 ♥️ 4 etc.] Any combinations that occupied all seven cards
 Royal Flush 👑 [♠️ 10 ♠️ J ♠️ Q ♠️ K ♠️ A]
 Straight Flush ⏩ [♦️ 5 ♦️ 6 ♦️ 7 ♦️ 8 ♦️ 9]
@@ -62,18 +123,81 @@ Three of a Kind 3️⃣ [♦️ 4 ♣️ 4 ♥️ 4]
 Double Pair 2️⃣ [♦️ A ♣️ A | ♦️ 2 ♥️ 2]
 Single Pair 1️⃣ [♦️ A ♣️ A]
 ```
-''', inline = False)
-    rules.add_field(name = '🃏 Landlord', value = '''
-Legendary card game! 
-[ll <@p1> <@p2> <@p3> <@p4>]
+'''.format(name), 
+color = random.choice(colors))
+    tp_rules.set_thumbnail(avatar)
+
+# LandLord Page
+    ll_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📙', 
+description = '''
+{} finished reading. Remember to put back the book to the shelf 🙄.
+
+Chapter 5 - 🃏 Landlord
+
+Legendary card game!
+With a twist of voting the card(s) played 😲. 
+Each player has 13 cards. Turns according to tag mention.
+Whoever empty the hand, wins 😎! 
+2 is the boss, 3 is the servant here.
 ```
+gb ll @p1 @p2 @p3 @p4 -- Must and only four players
 ✅ Join game ❎ Cancel game 👌 Agree 💩 Decline 
 1️⃣ Single 2️⃣ Double 3️⃣ Triple 4️⃣ Four 5️⃣ FIVE
 ```
-With a twist of voting the card(s) played 😲. 
-Whoever empty the hand, wins 😎! 
-''', inline = False)
-    await message.send(embed = rules)
+```
+SCORETABLE 💱 Largest to Smallest
+Five Combos
+- Straight Flush ⏩ [♦️ 5 ♦️ 6 ♦️ 7 ♦️ 8 ♦️ 9]
+- Four + Single 4️⃣1️⃣ [♦️ 6 ♣️ 6 ♥️ 6 ♠️ 6 | ♣️ A]
+- Three of a Kind + Pairs 3️⃣2️⃣ [♦️ 4 ♣️ 4 ♥️ 4 | ♦️ A ♣️ A] Compare using Pairs if want to suppress.
+- Straight ➡️ [♣️ 6 ♦️ 7 ♠️ 8 ♦️ 9 ♥️ 10]
+- Flush 🔁 [♦️ 5 ♦️ 3 ♦️ 8 ♦️ J ♦️ Q]
+Three of a Kind
+Pairs
+Single
+```
+'''.format(name), 
+color = random.choice(colors))
+    ll_rules.set_thumbnail(avatar)
+    ll_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
+
+    page = 1
+    m = await message.send(embed = cf_rules)
+    await m.add_reaction(left)
+    await m.add_reaction(right)
+
+    def valid(reaction, user):
+        return user == message.author and str(reaction) in [left, right]
+
+    while True:
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 90.0, check = valid)
+            await message.remove_reaction(reaction, user)
+
+            if str(reaction) == left:
+                page = page - 1
+                if page < 1:
+                    page = 5
+            elif str(reaction) == right:
+                page = page + 1
+                if page > 5:
+                    page = 1
+
+            if page == 1:
+                await message.edit(embed = cf_rules)
+            elif page == 2:
+                await message.edit(embed = gtbc_rules)
+            elif page == 3:
+                await message.edit(embed = bj_rules)
+            elif page == 4:
+                await message.edit(embed = tp_rules)
+            elif page == 5:
+                await message.edit(embed = ll_rules)
+        except asyncio.TimeoutError:
+            await message.send('{} put the book back already. Take it out again if you want to read 😊.'.format(name))
+            break
+
 
 # Coinflip for one
 @bot.command(aliases = ['cfs'])
@@ -329,7 +453,7 @@ async def blackjack(message, *name: discord.Member):
     deck = [11, 11, 11, 11, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10]
     random.shuffle(deck)
 
-# Each player round
+# One player at a time, send card, sum up card, sending result
     result = []
     for player in name:
         hands = []
@@ -361,6 +485,7 @@ async def blackjack(message, *name: discord.Member):
                     await player.send("Here is your card in hand.\n```{}```".format(hands))
                 elif str(reaction) == holdc:
                     hold = True
+# Change 11 to 1 if sum of card bigger than 21
                     if 11 in hands:
                         if sum(hands) > 21:
                             for n, i in enumerate(hands):
@@ -436,6 +561,7 @@ async def texaspoker(message, *name: discord.Member):
 # Round Loop
     pool = 1
 
+# Set 10 fames for each player, fold set False for this game
     dealer_hand = []
     fame = []
     foldc = []
@@ -473,6 +599,7 @@ async def texaspoker(message, *name: discord.Member):
         await message.send('Cards on Table 😎\n{}'.format(dealer_hand))
         await asyncio.sleep(2)
 
+# Hold set False for each round start
         holdc = []
         for player in players:
             holdc.append(False)
@@ -480,6 +607,7 @@ async def texaspoker(message, *name: discord.Member):
         while all(holdc) == False:
             for player in players:
                 x = players.index(player)
+# Ignore the player if folded in previous round
                 if foldc[x] == False:
                     m = await message.send("{}'s turn. What's your move? 🤠".format(player.mention))
                     await m.add_reaction(add)
@@ -529,7 +657,7 @@ async def texaspoker(message, *name: discord.Member):
                     holdc[x] = True
                     await message.send('You folded. So just be patient, Mr/Mrs {}.'.format(player.mention))
                 await asyncio.sleep(2)
-                    
+# Loop for twice for three rounds
         pool = pool + 1 
 
     await message.send('Totalling... {} in total for the winner 🤑.'.format(famepool))
@@ -560,6 +688,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     four = '4️⃣'
     five = '5️⃣'
 
+# Room to join game or cancel game
     readym = await message.send('React accordingly to tag to start the game ⌛️.')
     for ready_emoji in [join, cancel]:
         await readym.add_reaction(ready_emoji)
@@ -595,7 +724,9 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     secondName_hand = []
     thirdName_hand = []
     fourthName_hand = []
+    playerhand = [firstName_hand, secondName_hand, thirdName_hand, fourthName_hand]
 
+# Send 13 cards to each players
     for i in range (0, 13):
         for playerhand in [firstName_hand, secondName_hand, thirdName_hand, fourthName_hand]:
             random.shuffle(deck)
@@ -610,15 +741,20 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     await message.send('🎲 GAME COMMENCED 🎲')
 
     win = 0 
+# Loop while no one hand is empty
     while win == 0:
+# Loop for each players
         for player in players:
-            for playerhand in [firstName_hand]:
+# Take hand according to player index
+            x = players.index(player)
+            if playerhand[x]:
+# Each round loop 
                 y = 0
-                while y == 0:
-                    response_list = []
-                    try:
-                        x = 0
-                        while x == 0:
+                while True:
+                    if y == 0:
+# Append the card wanted to play
+                        response_list = []
+                        try:
                             await message.send("{}'s turn.".format(player.mention))
 
                             optionm = await message.send("How many cards you want to show?")
@@ -627,7 +763,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
 
                             def valid3(reaction, user):
                                 return user == player and str(reaction) in [one, two, three, four, five]
-
+# How many card wanted to play
                             playcard = 0
                             try:
                                 reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid3)
@@ -644,7 +780,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                             except asyncio.TimeoutError:
                                 await message.send("OK! You don't react. Skip 😑.")
                                 y = 2
-
+# Loop according to the playcard
                             countcard = 0
                             while countcard != playcard:
                                 await message.send('Play your card one by one 😇.')
@@ -658,16 +794,17 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                                 elif message.author.id != player.id:
                                     await message.send('Not you. Have coffee ☕️? or Tea 🍵? Just wait la.')
                             y = 1
-                    except asyncio.TimeoutError:
-                        await message.send('Timeout. Loss your turn 😑.')
-                        y = 2
-
-                    if y == 1:
+                        except asyncio.TimeoutError:
+                            await message.send('Timeout. Loss your turn 😑.')
+                            y = 2
+# Voting 
+                    elif y == 1:
                         await message.send('```{}```'.format(response_list))
                         agreem = await message.send("All agree to {}'s card? 🤔".format(player.name))
                         for agree_emoji in [accept, decline]:
                             await agreem.add_reaction(agree_emoji)
 
+                        allagree = 0
                         for player in players:
                             def valid2(reaction, user):
                                 return user == player and str(reaction) in [accept, decline]
@@ -677,22 +814,27 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                                 await message.send('{} agree or decline?'.format(player))
                                 if str(reaction) == accept:
                                     await message.send("{} agreed.".format(player.name))
+                                    allagree = allagree + 1
+                                    if allagree == 4:
+                                        y = 2
                                 elif str(reaction) == decline:
                                     await message.send("{} declined.".format(player.name))
                                     await message.send("YOU! Replay your card.")
                                     y = 0
                             except asyncio.TimeoutError:
                                 await message.send("Someone did not agree so all agreed yeah 😛.")
-
+# Finalizing
                     elif y == 2:
                         for i in response_list:
-                            playerhand.remove(i)
-                        if not playerhand:
+                            playerhand[x].remove(i)
+                        if not playerhand[x]:
                             win = 1
                             await message.send("{} is the winner.".format(player.mention))
-                        elif playerhand:
-                            await player.send('This is your deck in hand.\n{}'.format(playerhand))
-
+                            break
+                        elif playerhand[x]:
+                            await player.send('This is your deck in hand.\n{}'.format(playerhand[x]))
+                            break
+                        
     await asyncio.sleep(4)
     await message.send("THE SCOREBOARD\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
     
