@@ -3,11 +3,9 @@ from discord.ext import commands
 import random
 from random import choices
 import asyncio
-from dotenv import load_dotenv
 import os
 
 bot = commands.Bot(command_prefix = 'gb ')
-load_dotenv('.env')
 
 @bot.event
 async def on_ready():
@@ -843,4 +841,4 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     
 
 
-bot.run(os.getenv('BOT_SECRET_TOKEN'))
+bot.run(os.environ.get('BOT_SECRET_TOKEN'))
