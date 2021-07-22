@@ -93,7 +93,7 @@ gb bj @p1 @... -- No limit of players
 ```    
 '''.format(name), 
 color = random.choice(colors))
-    bj_rules.set_thumbnail(avatar)
+    bj_rules.set_thumbnail(url = avatar)
 
 # Texas Poker Page
     tp_rules = discord.Embed(
@@ -125,7 +125,7 @@ Single Pair 1️⃣ [♦️ A ♣️ A]
 ```
 '''.format(name), 
 color = random.choice(colors))
-    tp_rules.set_thumbnail(avatar)
+    tp_rules.set_thumbnail(url = avatar)
 
 # LandLord Page
     ll_rules = discord.Embed(
@@ -159,7 +159,7 @@ Single
 ```
 '''.format(name), 
 color = random.choice(colors))
-    ll_rules.set_thumbnail(avatar)
+    ll_rules.set_thumbnail(url = avatar)
     ll_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
 
     page = 1
