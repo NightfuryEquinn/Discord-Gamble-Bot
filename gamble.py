@@ -499,7 +499,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
             while countcard != playcard:
                 await message.send('Play your card one by one 😇.')
                 response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.firstName.id:
+                if message.author.id == firstName.id:
                     if response.content in firstName_hand:
                         response_list.append(response.content)
                         countcard = countcard + 1
@@ -572,7 +572,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
             while countcard != playcard:
                 await message.send('Play your card one by one 😇.')
                 response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.secondName.id:
+                if message.author.id == secondName.id:
                     if response.content in secondName_hand:
                         response_list.append(response.content)
                         countcard = countcard + 1
@@ -597,7 +597,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                         elif str(reaction) == decline:
                             await message.send("{} declined.".format(player.name))
                             await message.send("YOU! Replay your card.")
-                            getDecline = True
+                            getDecline2 = True
                     except asyncio.TimeoutError:
                         await message.send("Someone did not agree so all agreed yeah 😛.")
     # Finalizing
@@ -645,7 +645,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
             while countcard != playcard:
                 await message.send('Play your card one by one 😇.')
                 response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.thirdName.id:
+                if message.author.id == thirdName.id:
                     if response.content in thirdName_hand:
                         response_list.append(response.content)
                         countcard = countcard + 1
@@ -718,7 +718,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
             while countcard != playcard:
                 await message.send('Play your card one by one 😇.')
                 response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.fourthName.id:
+                if message.author.id == fourthName.id:
                     if response.content in fourthName_hand:
                         response_list.append(response.content)
                         countcard = countcard + 1
