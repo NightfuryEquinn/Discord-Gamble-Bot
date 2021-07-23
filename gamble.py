@@ -300,7 +300,7 @@ async def guess(message, firstName: discord.Member):
             reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid1)
             for pattern_reaction in [diamond, club, heart, spade]:
                 if str(reaction) == pattern_reaction:
-                    if result_card_pattern.lower() == pattern_reaction:
+                    if result_card_pattern.lower() == str(reaction):
                         ans1 = True
                         await message.send('Well, well, well, guessed. Now, try this.')
                     else:
@@ -323,7 +323,7 @@ async def guess(message, firstName: discord.Member):
             reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2)
             for no_reaction in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]:
                 if str(reaction) == no_reaction:
-                    if result_card_no.lower() == no_reaction:
+                    if result_card_no.lower() == str(reaction):
                         ans2 = True
                         await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
                     else:
