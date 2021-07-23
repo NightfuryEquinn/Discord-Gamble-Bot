@@ -45,7 +45,7 @@ title = 'No-Currency Gamble Bot Handbook 📗',
 description = '''
 {} is reading ~ 🤫.
 
-Chapter 1 - 🎭 Blackjack
+Chapter 1 - 🎭 Blackjack / 21点
 
 Classic! 
 Get 21 to win and don't explode yourself 💣
@@ -64,7 +64,7 @@ title = 'No-Currency Gamble Bot Handbook 📘',
 description = '''
 {} nearly finished reading, but not yet 😴
 
-Chapter 2 - 💎 Texas Poker
+Chapter 2 - 💎 Texas Poker / 德州扑克
 
 Stack chips! 
 Only all players holded will proceed second round.
@@ -96,7 +96,7 @@ title = 'No-Currency Gamble Bot Handbook 📙',
 description = '''
 {} finished reading. Remember to put back the book to the shelf 🙄.
 
-Chapter 3 - 🃏 Landlord
+Chapter 3 - 🃏 ChoDaiDi / 锄大第
 
 Legendary card game!
 With a twist of voting the card(s) played 😲. 
