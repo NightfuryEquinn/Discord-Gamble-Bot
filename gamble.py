@@ -524,18 +524,18 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                         elif str(reaction) == decline:
                             await message.send("{} declined.".format(player.name))
                             await message.send("YOU! Replay your card.")
-                            getDecline1 = False
+                            getDecline1 = True
                     except asyncio.TimeoutError:
                         await message.send("Someone did not agree so all agreed yeah 😛.")
     # Finalizing
-            for i in response_list:
-                firstName_hand.remove(i)
-            if not firstName_hand:
-                win = 1
-                await message.send("{} is the winner.".format(firstName.mention))
-                break
-            elif firstName_hand:
-                await firstName.send('This is your deck in hand.\n{}'.format(firstName_hand))
+        for i in response_list:
+            firstName_hand.remove(i)
+        if not firstName_hand:
+            win = 1
+            await message.send("{} is the winner.".format(firstName.mention))
+            break
+        elif firstName_hand:
+            await firstName.send('This is your deck in hand.\n{}'.format(firstName_hand))
 
         while getDecline2 == False:
             getDecline2 = True
@@ -601,14 +601,14 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                     except asyncio.TimeoutError:
                         await message.send("Someone did not agree so all agreed yeah 😛.")
     # Finalizing
-            for i in response_list:
-                secondName_hand.remove(i)
-            if not secondName_hand:
-                win = 1
-                await message.send("{} is the winner.".format(secondName.mention))
-                break
-            elif secondName_hand:
-                await secondName.send('This is your deck in hand.\n{}'.format(secondName_hand))
+        for i in response_list:
+            secondName_hand.remove(i)
+        if not secondName_hand:
+            win = 1
+            await message.send("{} is the winner.".format(secondName.mention))
+            break
+        elif secondName_hand:
+            await secondName.send('This is your deck in hand.\n{}'.format(secondName_hand))
 
         while getDecline3 == False:
             getDecline3 = True
@@ -674,14 +674,14 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                     except asyncio.TimeoutError:
                         await message.send("Someone did not agree so all agreed yeah 😛.")
     # Finalizing
-            for i in response_list:
-                thirdName_hand.remove(i)
-            if not thirdName_hand:
-                win = 1
-                await message.send("{} is the winner.".format(thirdName.mention))
-                break
-            elif thirdName_hand:
-                await thirdName.send('This is your deck in hand.\n{}'.format(thirdName_hand))
+        for i in response_list:
+            thirdName_hand.remove(i)
+        if not thirdName_hand:
+            win = 1
+            await message.send("{} is the winner.".format(thirdName.mention))
+            break
+        elif thirdName_hand:
+            await thirdName.send('This is your deck in hand.\n{}'.format(thirdName_hand))
 
         while getDecline4 == False:
             getDecline4 = True
@@ -747,14 +747,14 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                     except asyncio.TimeoutError:
                         await message.send("Someone did not agree so all agreed yeah 😛.")
     # Finalizing
-            for i in response_list:
-                fourthName_hand.remove(i)
-            if not fourthName_hand:
-                win = 1
-                await message.send("{} is the winner.".format(fourthName.mention))
-                break
-            elif fourthName_hand:
-                await fourthName.send('This is your deck in hand.\n{}'.format(fourthName_hand))
+        for i in response_list:
+            fourthName_hand.remove(i)
+        if not fourthName_hand:
+            win = 1
+            await message.send("{} is the winner.".format(fourthName.mention))
+            break
+        elif fourthName_hand:
+            await fourthName.send('This is your deck in hand.\n{}'.format(fourthName_hand))
                         
     await asyncio.sleep(4)
     await message.send("THE SCOREBOARD\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
