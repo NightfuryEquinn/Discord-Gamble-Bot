@@ -39,51 +39,13 @@ async def rules(message):
     right = '▶️'
     colors = [0xFFE4E1, 0x00FF7F, 0xD8BFD8, 0xDC143C, 0xFF4500, 0xDEB887, 0xADFF2F, 0x800000, 0x4682B4, 0x006400, 0x808080, 0xA0522D, 0xF08080, 0xC71585, 0xFFB6C1, 0x00CED1]
 
-# Coinflip Page
-    cf_rules = discord.Embed(
-title = 'No-Currency Gamble Bot Handbook 📔', 
-description = '''
-{} took the handbook from the bookshelf, reading 🤓.
-
-Chapter 1 - 💰 Coinflip
-
-Just a very basic and mundane coinflip game.
-You flip and wait 😶
-Why are you even reading this page?
-```
-gb cfs -- For one player
-gb cfd @p1 @p2 -- For two player
-```
-'''.format(name), 
-color = random.choice(colors))
-    cf_rules.set_thumbnail(url = avatar)
-
-# Guess the bot card Page
-    gtbc_rules = discord.Embed(
-title = 'No-Currency Gamble Bot Handbook 📕', 
-description = '''
-{} flipped to the second page, continue 🧐.
-
-Chapter 2 - 🤖 Guess The Bot Card
-
-Take on and challenge the bot in a guessing game.
-Round One -- Guess the pattern ✡️
-Round Two -- Guess the number 🧮
-May Homo Sapiens win! FIGHTING 🥳
-```
-gb gs @p1 -- One and only one player
-```
-'''.format(name), 
-color = random.choice(colors))
-    gtbc_rules.set_thumbnail(url = avatar)
-
 # Blackjack Page
     bj_rules = discord.Embed(
 title = 'No-Currency Gamble Bot Handbook 📗', 
 description = '''
-{} is still reading ~ 🤫.
+{} is reading ~ 🤫.
 
-Chapter 3 - 🎭 Blackjack
+Chapter 1 - 🎭 Blackjack
 
 Classic! 
 Get 21 to win and don't explode yourself 💣
@@ -102,7 +64,7 @@ title = 'No-Currency Gamble Bot Handbook 📘',
 description = '''
 {} nearly finished reading, but not yet 😴
 
-Chapter 4 - 💎 Texas Poker
+Chapter 2 - 💎 Texas Poker
 
 Stack chips! 
 Only all players holded will proceed second round.
@@ -134,7 +96,7 @@ title = 'No-Currency Gamble Bot Handbook 📙',
 description = '''
 {} finished reading. Remember to put back the book to the shelf 🙄.
 
-Chapter 5 - 🃏 Landlord
+Chapter 3 - 🃏 Landlord
 
 Legendary card game!
 With a twist of voting the card(s) played 😲. 
@@ -164,7 +126,7 @@ color = random.choice(colors))
     ll_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
 
     page = 1
-    m = await message.send(embed = cf_rules)
+    m = await message.send(embed = bj_rules)
     await m.add_reaction(left)
     await m.add_reaction(right)
 
@@ -179,160 +141,21 @@ color = random.choice(colors))
             if str(reaction) == left:
                 page = page - 1
                 if page < 1:
-                    page = 5
+                    page = 3
             elif str(reaction) == right:
                 page = page + 1
-                if page > 5:
+                if page > 3:
                     page = 1
 
             if page == 1:
-                await m.edit(embed = cf_rules)
-            elif page == 2:
-                await m.edit(embed = gtbc_rules)
-            elif page == 3:
                 await m.edit(embed = bj_rules)
-            elif page == 4:
+            elif page == 2:
                 await m.edit(embed = tp_rules)
-            elif page == 5:
+            elif page == 3:
                 await m.edit(embed = ll_rules)
         except asyncio.TimeoutError:
             await message.send('{} put the book back already. Take it out again if you want to read 😊.'.format(name))
             break
-
-
-# Coinflip for one
-@bot.command(aliases = ['cfs'])
-async def coinflips(message):
-    firstName = message.author.name
-    
-    coin = ['Head', 'Tail', 'It stands!']
-    luck = [10, 10, 1]
-    result = random.choices(coin, luck, k =1)
-
-    await asyncio.sleep(3)
-
-    if result == ['Head']:
-        await message.send('{} flipped a coin and landed on {}. Ouch, the coin hit its head.'.format(firstName, result))
-    elif result == ['Tail']:
-        await message.send('{} flipped a coin and landed on {}. Oh no, it broke its tailbone.'.format(firstName, result))
-    elif result == ['It stands!']:
-        await message.send('Hmm, the coin stands. Are you cheating, {}?'.format(firstName))
-
-
-# Coinflip for two
-@bot.command(aliases = ['cfd'])
-async def coinflipd(message, firstName: discord.Member, secondName: discord.Member):
-    coin = ['Head', 'Tail', 'It stands!']
-    luck = [10, 10, 1]
-    result = random.choices(coin, luck, k =1)
-    arrow_up = '⬆'
-    arrow_down = '⬇'
-
-    await message.send('{} challenged {} to coinflip! The coin is now in the air!'.format(firstName.mention, secondName.mention))
-    await asyncio.sleep(3)
-
-    m1 = await message.send('What is your guess, {}? The coin is still spinning.'.format(secondName))
-
-# Add reaction emoji
-    await m1.add_reaction(arrow_up)
-    await m1.add_reaction(arrow_down)
-
-# Check is it the correct user reacting the message
-    def valid(reaction, user):
-        return user == secondName and str(reaction) in [arrow_up, arrow_down]
-
-    try:
-        reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
-        if str(reaction) == arrow_up:
-            if result == ['Head']:
-                await message.send('Head it is. Hmm, when did a coin has head. Interesting.')
-            else:
-                await message.send('Too bad. Wrong guess. No luck. Bye bye.')
-        elif str(reaction) == arrow_down:
-            if result == ['Tail']:
-                await message.send('Ha! It is tail. Weak.')
-            else:
-                await message.send('Too bad. Wrong guess. No luck. Bye bye.')
-        elif result == ['It stands!']:
-            await message.send('Well, you never know. {} flipped and made the coin stands. Stunned? {}.'.format(firstName, secondName))
-    except asyncio.TimeoutError:
-            await message.send('Interesting, the coin has flipped for 30 seconds in the air and {} did not guess. I wonder why?'.format(secondName))
-
-
-# Guess the bot card
-@bot.command(aliases = ['gs'])
-async def guess(message, firstName: discord.Member):
-    diamond = '♦️'
-    club = '♣️'
-    heart = '♥️'
-    spade = '♠️'
-    card_pattern = ['Diamond', 'Club', 'Heart', 'Spade']
-
-    two = '2️⃣'
-    three = '3️⃣'
-    four = '4️⃣'
-    five = '5️⃣'
-    six = '6️⃣'
-    seven = '7️⃣'
-    eight = '8️⃣'
-    nine = '9️⃣'
-    ten = '🔟'
-    jack = '🤴'
-    queen = '👸'
-    king = '👑'
-    ace = '🅰️'
-    card_no = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace']
-
-    result_card_pattern = random.choice(card_pattern)
-    result_card_no = random.choice(card_no)
-
-    m1 = await message.send('Guess my card pattern, human. Or shall I call you by your name, {}. Two chances.'.format(firstName))
-    for pattern_emoji in [diamond, club, heart, spade]:
-        await m1.add_reaction(pattern_emoji)
-
-    def valid1(reaction, user):
-        return user == firstName and str(reaction) in [diamond, club, heart, spade]
-    
-    try:
-        chance1 = 0
-        ans1 = False
-        while chance1 < 2 and ans1 == False:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 15.0, check = valid1)
-            for pattern_reaction in [diamond, club, heart, spade]:
-                if str(reaction) == pattern_reaction:
-                    if result_card_pattern.lower() == str(pattern_reaction):
-                        ans1 = True
-                        await message.send('Well, well, well, guessed. Now, try this.')
-                    else:
-                        await message.send('Too bad so sad, human.')
-            chance1 = chance1 + 1
-    except asyncio.TimeoutError:
-        await message.send('Hellooooo? Anybody thereeee? No? All your luck is mine now 👀. Do not leave yet!')
-
-    m2 = await message.send('Guess my card number now. Prove to me you are worthy human, {}. Four chances.'.format(firstName))
-    for number_emoji in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]:
-        await m2.add_reaction(number_emoji)
-
-    def valid2(reaction, user):
-        return user == firstName and str(reaction) in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]
-
-    try:
-        chance2 = 0
-        ans2 = False
-        while chance2 < 4 and ans2 == False:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 20.0, check = valid2)
-            for no_reaction in [two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace]:
-                if str(reaction) == no_reaction:
-                    if result_card_no.lower() == str(no_reaction):
-                        ans2 = True
-                        await message.send('MY MANNN, {}!! YOU HAVE MY RESPECT!!'.format(firstName))
-                    else:
-                        await message.send('Try again, when you feel you are worthy enough to challenge me.')
-            chance2 = chance2 + 1
-            if chance2 == 4:
-                await message.send('The card is {} {}'.format(result_card_pattern, result_card_no))
-    except asyncio.TimeoutError:
-        await message.send('You are unworthy, human! The card is {} {}'.format(result_card_pattern, result_card_no))
 
 
 # Blackjack for two
