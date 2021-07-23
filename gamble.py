@@ -450,6 +450,9 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
 
     await message.send('Shuffling card and distributing ...')
     await firstName.send('This is your card deck.\n{}'.format(firstName_hand))
+    await secondName.send('This is your card deck.\n{}'.format(secondName_hand))
+    await thirdName.send('This is your card deck.\n{}'.format(thirdName_hand))
+    await fourthName.send('This is your card deck.\n{}'.format(fourthName_hand))
     await asyncio.sleep(10)
 
     await message.send('🎲 GAME COMMENCED 🎲')
