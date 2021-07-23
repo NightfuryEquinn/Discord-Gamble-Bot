@@ -383,7 +383,7 @@ async def texaspoker(message, *name: discord.Member):
 
     
 # Landlord for and only four
-@bot.command(aliases = ['ll'])
+#@bot.command(aliases = ['ll'])
 async def landlord(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member, fourthName: discord.Member):
     await message.send('This is a complicated game, so be prepared and understand the rules beforehand.')
     await asyncio.sleep(5)
@@ -457,102 +457,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
 
     await message.send('🎲 GAME COMMENCED 🎲')
 
-    win = 0 
-# Loop while no one hand is empty
-    while win == 0:
-# Loop for each players
-        for player in players:
-# Take hand according to player index
-            x = players.index(player)
-            if playerhand[x]:
-# Each round loop 
-                y = 0
-                while True:
-                    if y == 0:
-# Append the card wanted to play
-                        response_list = []
-                        try:
-                            await message.send("{}'s turn.".format(player.mention))
-
-                            optionm = await message.send("How many cards you want to show?")
-                            for option_emoji in [one, two, three, four, five]:
-                                await optionm.add_reaction(option_emoji)
-
-                            def valid3(reaction, user):
-                                return user == player and str(reaction) in [one, two, three, four, five]
-# How many card wanted to play
-                            playcard = 0
-                            try:
-                                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid3)
-                                if str(reaction) == one:
-                                    playcard = 1
-                                elif str(reaction) == two:
-                                    playcard = 2
-                                elif str(reaction) == three:
-                                    playcard = 3
-                                elif str(reaction) == four:
-                                    playcard = 4
-                                elif str(reaction) == five:
-                                    playcard = 5
-                            except asyncio.TimeoutError:
-                                await message.send("OK! You don't react. Skip 😑.")
-                                y = 2
-                                playcard = 0
-# Loop according to the playcard
-                            countcard = 0
-                            while countcard != playcard:
-                                await message.send('Play your card one by one 😇.')
-                                response = await bot.wait_for('message', timeout = 120.0, check = None)
-                                if message.author.id == player.id:
-                                    if response.content in playerhand:
-                                        response_list.append(response.content)
-                                        countcard = countcard + 1
-                                    elif response.content not in playerhand:
-                                        await message.send('Card not in your deck 😐.')
-                                elif message.author.id != player.id:
-                                    await message.send('Not you. Have coffee ☕️? or Tea 🍵? Just wait la.')
-                            if playcard != 0:
-                                y = 1
-                        except asyncio.TimeoutError:
-                            await message.send('Timeout. Loss your turn 😑.')
-                            y = 2
-# Voting 
-                    elif y == 1:
-                        await message.send('```{}```'.format(response_list))
-                        agreem = await message.send("All agree to {}'s card? 🤔".format(player.name))
-                        for agree_emoji in [accept, decline]:
-                            await agreem.add_reaction(agree_emoji)
-
-                        allagree = 0
-                        for player in players:
-                            def valid2(reaction, user):
-                                return user == player and str(reaction) in [accept, decline]
-                        
-                            try:
-                                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid2)
-                                await message.send('{} agree or decline?'.format(player))
-                                if str(reaction) == accept:
-                                    await message.send("{} agreed.".format(player.name))
-                                    allagree = allagree + 1
-                                    if allagree == 4:
-                                        y = 2
-                                elif str(reaction) == decline:
-                                    await message.send("{} declined.".format(player.name))
-                                    await message.send("YOU! Replay your card.")
-                                    y = 0
-                            except asyncio.TimeoutError:
-                                await message.send("Someone did not agree so all agreed yeah 😛.")
-# Finalizing
-                    elif y == 2:
-                        for i in response_list:
-                            playerhand[x].remove(i)
-                        if not playerhand[x]:
-                            win = 1
-                            await message.send("{} is the winner.".format(player.mention))
-                            break
-                        elif playerhand[x]:
-                            await player.send('This is your deck in hand.\n{}'.format(playerhand[x]))
-                            break
+    
                         
     await asyncio.sleep(4)
     await message.send("THE SCOREBOARD\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
