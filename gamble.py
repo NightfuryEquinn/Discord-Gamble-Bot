@@ -408,11 +408,11 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
         await readym.add_reaction(ready_emoji)
 
     for player in players:
-        def valid1(reaction, user):
+        def valid(reaction, user):
             return user == player and str(reaction) in [join, cancel]
         
         try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid1)
+            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
             if str(reaction) == join:
                 await message.send('{} joined'.format(player.name))
             elif str(reaction) == cancel:
@@ -458,303 +458,224 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     await message.send('🎲 GAME COMMENCED 🎲')
 
     win = 0 
-    getDecline1 = False
-    getDecline2 = False
-    getDecline3 = False
-    getDecline4 = False
-# Loop while no one hand is empty
+    getDecline = False
+    singleCard = False
+    doubleCard = False
+    tripleCard = False
+    fourCard = False
+    fiveCard = False
+    
     while win == 0:
-        while getDecline1 == False:
-            getDecline1 = True
-            response_list = []
-            await message.send("{}'s turn.".format(firstName.mention))
+# Loop for each players
+        skipCard = skipCard
+        for player in players:
+# Get player hand respectively
+            x = players.index(player)
+            if not playerhand[x]:
+                win = 1
+                await message.send('{} cleared all cards!'.format(player.name))
+            elif playerhand[x]:
+# Each player round
+                response_list = []
+                while getDecline == False:
+                    getDecline = True
+                    await message.send("{}'s turn.".format(player.name))
+                    if (skipCard == 3) and (singleCard == False) and (doubleCard == False) and (tripleCard == False) and (fourCard == False) and (fiveCard == False):
+                        skipCard = 0
+                        option = await message.send('How many cards you want to play?')
+                        for option_emoji in [one, two, three, four, five, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [one, two, three, four, five, cancel]
+# Cards to play
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == one:
+                                singleCard = True
+                                playcard = 1
+                            elif str(reaction) == two:
+                                doubleCard = True
+                                playcard = 2
+                            elif str(reaction) == three:
+                                tripleCard = True
+                                playcard = 3
+                            elif str(reaction) == four:
+                                fourCard = True
+                                playcard = 4
+                            elif str(reaction) == five:
+                                fiveCard = True
+                                playcard = 5
+                            elif str(reaction) == cancel:
+                                singleCard = False
+                                doubleCard = False
+                                tripleCard = False
+                                fourCard = False
+                                fiveCard = False
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+# Single card play
+                    elif singleCard == True:
+                        option = await message.send('Either single card or skip.')
+                        for option_emoji in [one, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [one, cancel]
 
-            optionm = await message.send("How many cards you want to show?")
-            for option_emoji in [one, two, three, four, five, cancel]:
-                await optionm.add_reaction(option_emoji)
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == one:
+                                singleCard = True
+                                playcard = 1
+                                skipCard = 0
+                            elif str(reaction) == cancel:
+                                skipCard = skipCard + 1
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+                            skipCard = skipCard + 1
+# Double cards play
+                    elif doubleCard == True:
+                        option = await message.send('Either double or skip.')
+                        for option_emoji in [two, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [two, cancel]
 
-            def optionValid(reaction, user):
-                return user == firstName and str(reaction) in [one, two, three, four, five, cancel]
-    # How many card wanted to play
-            playcard = 0
-            try:
-                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionValid)
-                if str(reaction) == one:
-                    playcard = 1
-                elif str(reaction) == two:
-                    playcard = 2
-                elif str(reaction) == three:
-                    playcard = 3
-                elif str(reaction) == four:
-                    playcard = 4
-                elif str(reaction) == five:
-                    playcard = 5
-                elif str(reaction) == cancel:
-                    playcard = 0
-            except asyncio.TimeoutError:
-                await message.send("OK! You don't react. Skip 😑.")
-                playcard = 0
-    # Loop according to the playcard
-            countcard = 0
-            while countcard != playcard:
-                await message.send('Play your card one by one 😇.')
-                response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.author.id == firstName.id:
-                    if response.content in firstName_hand:
-                        response_list.append(response.content)
-                        countcard = countcard + 1
-                    elif response.content not in firstName_hand:
-                        await message.send('Card not in your deck 😐.')
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == two:
+                                doubleCard = True
+                                playcard = 2
+                                skipCard = 0
+                            elif str(reaction) == cancel:
+                                skipCard = skipCard + 1
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+                            skipCard = skipCard + 1
+# Three cards play
+                    elif tripleCard == True:
+                        option = await message.send('Either triple or skip.')
+                        for option_emoji in [three, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [three, cancel]
 
-            if playcard != 0:
-                await message.send('```{}```'.format(response_list))
-                agreem = await message.send("All agree to {}'s card? 🤔".format(firstName.name))
-                for agree_emoji in [accept, decline]:
-                    await agreem.add_reaction(agree_emoji)
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == three:
+                                tripleCard = True
+                                playcard = 3
+                                skipCard = 0
+                            elif str(reaction) == cancel:
+                                skipCard = skipCard + 1
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+                            skipCard = skipCard + 1
+# Four cards play
+                    elif fourCard == True:
+                        option = await message.send('Either four or skip.')
+                        for option_emoji in [four, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [four, cancel]
 
-                for player in players:
-                    def valid(reaction, user):
-                        return user == player and str(reaction) in [accept, decline]
-            
-                    try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid)
-                        await message.send('{} agree or decline?'.format(player))
-                        if str(reaction) == accept:
-                            await message.send("{} agreed.".format(player.name))
-                        elif str(reaction) == decline:
-                            await message.send("{} declined.".format(player.name))
-                            await message.send("YOU! Replay your card.")
-                            getDecline1 = True
-                    except asyncio.TimeoutError:
-                        await message.send("Someone did not agree so all agreed yeah 😛.")
-    # Finalizing
-        for i in response_list:
-            firstName_hand.remove(i)
-        if not firstName_hand:
-            win = 1
-            await message.send("{} is the winner.".format(firstName.mention))
-            break
-        elif firstName_hand:
-            await firstName.send('This is your deck in hand.\n{}'.format(firstName_hand))
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == four:
+                                fourCard = True
+                                playcard = 4
+                                skipCard = 0
+                            elif str(reaction) == cancel:
+                                skipCard = skipCard + 1
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+                            skipCard = skipCard + 1
+# Five cards play
+                    elif fiveCard == True:
+                        option = await message.send('Either five or skip.')
+                        for option_emoji in [five, cancel]:
+                            await option.add_reaction(option_emoji)
+                        
+                        def optionCheck(reaction, user):
+                            return user == player and str(reaction) in [five, cancel]
 
-        while getDecline2 == False:
-            getDecline2 = True
-            response_list = []
-            await message.send("{}'s turn.".format(secondName.mention))
+                        playcard = 0
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionCheck)
+                            if str(reaction) == five:
+                                fourCard = True
+                                playcard = 5
+                                skipCard = 0
+                            elif str(reaction) == cancel:
+                                skipCard = skipCard + 1
+                                playcard = 0
+                        except asyncio.TimeoutError:
+                            await message.send('I will just skip your turn. No mercy.')
+                            playcard = 0
+                            skipCard = skipCard + 1
+# Play the cards
+                    countcard = 0
+                    while countcard != playcard:
+                        cardNo = 1
+                        await message.send('Play your card in your hand. {} left.'.format(cardNo))
+                        response = await bot.wait_for('message', timeout = 120.0, check = None)
+                        if message.author.id == player.id:
+                            if response.content in playerhand[x]:
+                                response_list.append(response.content)
+                                countcard = countcard + 1
+                                cardNo = cardNo + 1
+# Voting the cards played
+                    if playcard != 0:
+                        await message.send('Voting Round')
+                        await asyncio.sleep(2)
+                        for player in players:
+                            def voteCheck(reaction, user):
+                                return user == player and str(reaction) in [accept, decline]
 
-            optionm = await message.send("How many cards you want to show?")
-            for option_emoji in [one, two, three, four, five, cancel]:
-                await optionm.add_reaction(option_emoji)
-
-            def optionValid(reaction, user):
-                return user == secondName and str(reaction) in [one, two, three, four, five, cancel]
-    # How many card wanted to play
-            playcard = 0
-            try:
-                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionValid)
-                if str(reaction) == one:
-                    playcard = 1
-                elif str(reaction) == two:
-                    playcard = 2
-                elif str(reaction) == three:
-                    playcard = 3
-                elif str(reaction) == four:
-                    playcard = 4
-                elif str(reaction) == five:
-                    playcard = 5
-                elif str(reaction) == cancel:
-                    playcard = 0
-            except asyncio.TimeoutError:
-                await message.send("OK! You don't react. Skip 😑.")
-                playcard = 0
-    # Loop according to the playcard
-            countcard = 0
-            while countcard != playcard:
-                await message.send('Play your card one by one 😇.')
-                response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.author.id == secondName.id:
-                    if response.content in secondName_hand:
-                        response_list.append(response.content)
-                        countcard = countcard + 1
-                    elif response.content not in secondName_hand:
-                        await message.send('Card not in your deck 😐.')
-
-            if playcard != 0:
-                await message.send('```{}```'.format(response_list))
-                agreem = await message.send("All agree to {}'s card? 🤔".format(secondName.name))
-                for agree_emoji in [accept, decline]:
-                    await agreem.add_reaction(agree_emoji)
-
-                for player in players:
-                    def valid(reaction, user):
-                        return user == player and str(reaction) in [accept, decline]
-            
-                    try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid)
-                        await message.send('{} agree or decline?'.format(player))
-                        if str(reaction) == accept:
-                            await message.send("{} agreed.".format(player.name))
-                        elif str(reaction) == decline:
-                            await message.send("{} declined.".format(player.name))
-                            await message.send("YOU! Replay your card.")
-                            getDecline2 = True
-                    except asyncio.TimeoutError:
-                        await message.send("Someone did not agree so all agreed yeah 😛.")
-    # Finalizing
-        for i in response_list:
-            secondName_hand.remove(i)
-        if not secondName_hand:
-            win = 1
-            await message.send("{} is the winner.".format(secondName.mention))
-            break
-        elif secondName_hand:
-            await secondName.send('This is your deck in hand.\n{}'.format(secondName_hand))
-
-        while getDecline3 == False:
-            getDecline3 = True
-            response_list = []
-            await message.send("{}'s turn.".format(thirdName.mention))
-
-            optionm = await message.send("How many cards you want to show?")
-            for option_emoji in [one, two, three, four, five, cancel]:
-                await optionm.add_reaction(option_emoji)
-
-            def optionValid(reaction, user):
-                return user == thirdName and str(reaction) in [one, two, three, four, five, cancel]
-    # How many card wanted to play
-            playcard = 0
-            try:
-                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionValid)
-                if str(reaction) == one:
-                    playcard = 1
-                elif str(reaction) == two:
-                    playcard = 2
-                elif str(reaction) == three:
-                    playcard = 3
-                elif str(reaction) == four:
-                    playcard = 4
-                elif str(reaction) == five:
-                    playcard = 5
-                elif str(reaction) == cancel:
-                    playcard = 0
-            except asyncio.TimeoutError:
-                await message.send("OK! You don't react. Skip 😑.")
-                playcard = 0
-    # Loop according to the playcard
-            countcard = 0
-            while countcard != playcard:
-                await message.send('Play your card one by one 😇.')
-                response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.author.id == thirdName.id:
-                    if response.content in thirdName_hand:
-                        response_list.append(response.content)
-                        countcard = countcard + 1
-                    elif response.content not in thirdName_hand:
-                        await message.send('Card not in your deck 😐.')
-
-            if playcard != 0:
-                await message.send('```{}```'.format(response_list))
-                agreem = await message.send("All agree to {}'s card? 🤔".format(thirdName.name))
-                for agree_emoji in [accept, decline]:
-                    await agreem.add_reaction(agree_emoji)
-
-                for player in players:
-                    def valid(reaction, user):
-                        return user == player and str(reaction) in [accept, decline]
-            
-                    try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid)
-                        await message.send('{} agree or decline?'.format(player))
-                        if str(reaction) == accept:
-                            await message.send("{} agreed.".format(player.name))
-                        elif str(reaction) == decline:
-                            await message.send("{} declined.".format(player.name))
-                            await message.send("YOU! Replay your card.")
-                            getDecline3 = True
-                    except asyncio.TimeoutError:
-                        await message.send("Someone did not agree so all agreed yeah 😛.")
-    # Finalizing
-        for i in response_list:
-            thirdName_hand.remove(i)
-        if not thirdName_hand:
-            win = 1
-            await message.send("{} is the winner.".format(thirdName.mention))
-            break
-        elif thirdName_hand:
-            await thirdName.send('This is your deck in hand.\n{}'.format(thirdName_hand))
-
-        while getDecline4 == False:
-            getDecline4 = True
-            response_list = []
-            await message.send("{}'s turn.".format(fourthName.mention))
-
-            optionm = await message.send("How many cards you want to show?")
-            for option_emoji in [one, two, three, four, five, cancel]:
-                await optionm.add_reaction(option_emoji)
-
-            def optionValid(reaction, user):
-                return user == fourthName and str(reaction) in [one, two, three, four, five, cancel]
-    # How many card wanted to play
-            playcard = 0
-            try:
-                reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = optionValid)
-                if str(reaction) == one:
-                    playcard = 1
-                elif str(reaction) == two:
-                    playcard = 2
-                elif str(reaction) == three:
-                    playcard = 3
-                elif str(reaction) == four:
-                    playcard = 4
-                elif str(reaction) == five:
-                    playcard = 5
-                elif str(reaction) == cancel:
-                    playcard = 0
-            except asyncio.TimeoutError:
-                await message.send("OK! You don't react. Skip 😑.")
-                playcard = 0
-    # Loop according to the playcard
-            countcard = 0
-            while countcard != playcard:
-                await message.send('Play your card one by one 😇.')
-                response = await bot.wait_for('message', timeout = 120.0, check = None)
-                if message.author.id == fourthName.id:
-                    if response.content in fourthName_hand:
-                        response_list.append(response.content)
-                        countcard = countcard + 1
-                    elif response.content not in fourthName_hand:
-                        await message.send('Card not in your deck 😐.')
-
-            if playcard != 0:
-                await message.send('```{}```'.format(response_list))
-                agreem = await message.send("All agree to {}'s card? 🤔".format(fourthName.name))
-                for agree_emoji in [accept, decline]:
-                    await agreem.add_reaction(agree_emoji)
-
-                for player in players:
-                    def valid(reaction, user):
-                        return user == player and str(reaction) in [accept, decline]
-            
-                    try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = valid)
-                        await message.send('{} agree or decline?'.format(player))
-                        if str(reaction) == accept:
-                            await message.send("{} agreed.".format(player.name))
-                        elif str(reaction) == decline:
-                            await message.send("{} declined.".format(player.name))
-                            await message.send("YOU! Replay your card.")
-                            getDecline4 = True
-                    except asyncio.TimeoutError:
-                        await message.send("Someone did not agree so all agreed yeah 😛.")
-    # Finalizing
-        for i in response_list:
-            fourthName_hand.remove(i)
-        if not fourthName_hand:
-            win = 1
-            await message.send("{} is the winner.".format(fourthName.mention))
-            break
-        elif fourthName_hand:
-            await fourthName.send('This is your deck in hand.\n{}'.format(fourthName_hand))
+                            try:
+                                reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = voteCheck)
+                                await message.send('```{}```\nDo you agree with the cards played?'.format(response_list))
+                                if str(reaction) == accept:
+                                    await message.send('{} agreed.'.format(player.name))
+                                elif str(reaction) == decline:
+                                    await message.send('{} declined.'.format(player.name))
+                                    getDecline = False
+                            except asyncio.TimeoutError:
+                                await message.send('Someone did not react so assume you agreed.')
+# Finalizing results
+                if getDecline == True:
+                    for i in response_list:
+                        playerhand[x].remove(i)
+                    await player.send('This is your card in deck.\n{}'.format(playerhand[x]))
+                    await message.send('```{}```\nCard on table'.format(response_list))
+                
+                if skipCard == 3:
+                    singleCard = False
+                    doubleCard = False
+                    tripleCard = False
+                    fourCard = False
+                    fiveCard = False
+                    
+                await asyncio.sleep(5)
                         
     await asyncio.sleep(4)
     await message.send("THE SCOREBOARD\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
