@@ -403,24 +403,24 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     five = '5️⃣'
 
 # Room to join game or cancel game
-    readym = await message.send('React accordingly to tag to start the game ⌛️.')
-    for ready_emoji in [join, cancel]:
-        await readym.add_reaction(ready_emoji)
+    #readym = await message.send('React accordingly to tag to start the game ⌛️.')
+    #for ready_emoji in [join, cancel]:
+        #await readym.add_reaction(ready_emoji)
 
-    for player in players:
-        def valid(reaction, user):
-            return user == player and str(reaction) in [join, cancel]
+    #for player in players:
+        #def valid(reaction, user):
+            #return user == player and str(reaction) in [join, cancel]
         
-        try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
-            if str(reaction) == join:
-                await message.send('{} joined'.format(player.name))
-            elif str(reaction) == cancel:
-                await message.send('{} rejected'.format(player.name))
-                return
-        except asyncio.TimeoutError:
-            await message.send('Someone did not join.')
-            return
+        #try:
+            #reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = valid)
+            #if str(reaction) == join:
+                #await message.send('{} joined'.format(player.name))
+            #elif str(reaction) == cancel:
+                #await message.send('{} rejected'.format(player.name))
+                #return
+        #except asyncio.TimeoutError:
+            #await message.send('Someone did not join.')
+            #return
 
     await asyncio.sleep(2)
     await message.send('Game will start soon!')
