@@ -464,10 +464,10 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     tripleCard = False
     fourCard = False
     fiveCard = False
-    
+    skipCard = 0
+
     while win == 0:
 # Loop for each players
-        skipCard = skipCard
         for player in players:
 # Get player hand respectively
             x = players.index(player)
