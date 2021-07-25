@@ -480,7 +480,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
                 while getDecline == False:
                     getDecline = True
                     await message.send("{}'s turn.".format(player.name))
-                    if (skipCard == 3) and (singleCard == False) and (doubleCard == False) and (tripleCard == False) and (fourCard == False) and (fiveCard == False):
+                    if (skipCard == 3):
                         skipCard = 0
                         option = await message.send('How many cards you want to play?')
                         for option_emoji in [one, two, three, four, five, cancel]:
