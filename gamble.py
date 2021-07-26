@@ -433,29 +433,18 @@ Have some sportsmanship or 'gambleship'? 👻
     await message.send('Be ready ✔️ ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
 
     deck = [
-'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'DJ', 'DQ', 'DK',
-'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'CJ', 'CQ', 'CK',
-'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'HJ', 'HQ', 'HK',
-'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'SJ', 'SQ', 'SK',
+'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'DJ', 'DQ', 'DK', 'DA',
+'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'CJ', 'CQ', 'CK', 'CA',
+'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'HJ', 'HQ', 'HK', 'HA',
+'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'SJ', 'SQ', 'SK', 'SA'
 ]
     
     for i in range(0, 13):
-        random.shuffle(deck)
-        a = random.choice(deck)
-        firstName_hand.append(a)
-        deck.remove(a)
-        random.shuffle(deck)
-        b = random.choice(deck)
-        secondName_hand.append(b)
-        deck.remove(b)
-        random.shuffle(deck)
-        c = random.choice(deck)
-        thirdName_hand.append(c)
-        deck.remove(c)
-        random.shuffle(deck)
-        d = random.choice(deck)
-        fourthName_hand.append(d)
-        deck.remove(d)
+        for hand in playerhand:
+            random.shuffle(deck)
+            a = random.choice(deck)
+            hand.append(a)
+            deck.remove(a)
 
     await firstName.send('Here is your card in hand.\n{}'.format(firstName_hand))
     await secondName.send('Here is your card in hand.\n{}'.format(secondName_hand))
