@@ -489,7 +489,7 @@ Have some sportsmanship or 'gambleship'? 👻
                         playcard = 0
                 except asyncio.TimeoutError:
                     playcard = 0
-                    await message.send("Time's up. {} lost a turn 😕".format(firstName))
+                    await message.send("Time's up. {} lost a turn 😕".format(player.name))
                 
                 nocard = playcard
                 while countcard != playcard:
@@ -506,20 +506,21 @@ Have some sportsmanship or 'gambleship'? 👻
                 vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏".format(player.name))
                 for vote_emoji in [accept, decline]:
                     await vote.add_reaction(vote_emoji)
+
                 for player in players:
                     def checkVote(reaction, user):
                         return user == player and str(reaction) in [accept, decline]
-                    
+
                     try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
+                        reaction, user = bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
                         if str(reaction) == accept:
                             await message.send('{} agreed.'.format(player.name))
                         elif str(reaction) == decline:
                             await message.send('{} disagreed.'.format(player.name))
                             getDecline = False
                     except asyncio.TimeoutError:
-                        await message.send('{} did not vote so count as agreed 😛'.format(player.name))
-                    
+                        await message.send('{} did not vote so count as agreed 🤡'.format(player.name))
+
             if playerhand[x]:
                 for i in response_list:
                     playerhand[x].remove(i)
