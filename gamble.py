@@ -408,8 +408,7 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
 This is a complicated game, so be prepared and understand the rules beforehand 😌 
 Card(s) played is/are validated by players' votes 🤫
 Have some sportsmanship or 'gambleship'? 👻
-Cycle: {}
-'''.format(players))
+''')
     await asyncio.sleep(5)
 
     #ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
@@ -513,7 +512,7 @@ Cycle: {}
                         return user == player and str(reaction) in [accept, decline]
 
                     try:
-                        reaction, user = bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
                         if str(reaction) == accept:
                             await message.send('{} agreed.'.format(player.name))
                         elif str(reaction) == decline:
