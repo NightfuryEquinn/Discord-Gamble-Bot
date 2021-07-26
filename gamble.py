@@ -459,74 +459,74 @@ Have some sportsmanship or 'gambleship'? 👻
     
     while win == 0:
         for player in players:
-            x = players.index(player)
-            playcard = 0
-            countcard = 0
-            response_list = []
-            getDecline = False
-            while getDecline == False:
-                getDecline = True
-                play = await message.send("{}'s turn.\nHow many cards should you play? 🤔".format(player.mention))
-                for play_emoji in [one, two, three, four, five, cancel]:
-                    await play.add_reaction(play_emoji)
+            for hand in playerhand:
+                playcard = 0
+                countcard = 0
+                response_list = []
+                getDecline = False
+                while getDecline == False:
+                    getDecline = True
+                    play = await message.send("{}'s turn.\nHow many cards should you play? 🤔".format(player.mention))
+                    for play_emoji in [one, two, three, four, five, cancel]:
+                        await play.add_reaction(play_emoji)
 
-                def checkPlay(reaction, user):
-                    return user == player and str(reaction) in [one, two, three, four, five, cancel]
-                
-                try:
-                    reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = checkPlay)
-                    if str(reaction) == one:
-                        playcard = 1
-                    elif str(reaction) == two:
-                        playcard = 2
-                    elif str(reaction) == three:
-                        playcard = 3
-                    elif str(reaction) == four:
-                        playcard = 4
-                    elif str(reaction) == five:
-                        playcard = 5
-                    elif str(reaction) == cancel:
-                        playcard = 0
-                except asyncio.TimeoutError:
-                    playcard = 0
-                    await message.send("Time's up. {} lost a turn 😕".format(player.name))
-                
-                while countcard != playcard:
-                    await message.send('Play your card(s) one message at a time 🤡')
-                    response = await bot.wait_for('message', timeout = 120.0, check = None)
-                    if message.author.id == player.id:
-                        if response.content in playerhand[x]:
-                            response_list.append(response.content)
-                            countcard = countcard + 1
-                        elif response.content not in playerhand[x]:
-                            await message.send('You sure the card is in your hand? 😐')
-                
-                vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏\n```{}``` ".format(player.name, response_list))
-                for vote_emoji in [accept, decline]:
-                    await vote.add_reaction(vote_emoji)
-
-                for player in players:
-                    def checkVote(reaction, user):
-                        return user == player and str(reaction) in [accept, decline]
-
+                    def checkPlay(reaction, user):
+                        return user == player and str(reaction) in [one, two, three, four, five, cancel]
+                    
                     try:
-                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
-                        if str(reaction) == accept:
-                            await message.send('{} agreed.'.format(player.name))
-                        elif str(reaction) == decline:
-                            await message.send('{} disagreed. Replay card'.format(player.name))
-                            getDecline = False
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = checkPlay)
+                        if str(reaction) == one:
+                            playcard = 1
+                        elif str(reaction) == two:
+                            playcard = 2
+                        elif str(reaction) == three:
+                            playcard = 3
+                        elif str(reaction) == four:
+                            playcard = 4
+                        elif str(reaction) == five:
+                            playcard = 5
+                        elif str(reaction) == cancel:
+                            playcard = 0
                     except asyncio.TimeoutError:
-                        await message.send('{} did not vote so count as agreed 🤡'.format(player.name))
+                        playcard = 0
+                        await message.send("Time's up. {} lost a turn 😕".format(player.name))
+                    
+                    while countcard != playcard:
+                        await message.send('Play your card(s) one message at a time 🤡')
+                        response = await bot.wait_for('message', timeout = 120.0, check = None)
+                        if message.author.id == player.id:
+                            if response.content in hand:
+                                response_list.append(response.content)
+                                countcard = countcard + 1
+                            elif response.content not in hand:
+                                await message.send('You sure the card is in your hand? 😐')
+                    
+                    vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏\n```{}``` ".format(player.name, response_list))
+                    for vote_emoji in [accept, decline]:
+                        await vote.add_reaction(vote_emoji)
 
-                if getDecline == True:
-                    if playerhand[x]:
-                        for i in response_list:
-                            playerhand[x].remove(i)
-                        await player.send('This is your card in hand now.'.format(playerhand))
-                    elif not playerhand[x]:
-                        win = 1
-                        await message.send('🥳 {} wins! 🥳'.format(player.mention))
+                    for player in players:
+                        def checkVote(reaction, user):
+                            return user == player and str(reaction) in [accept, decline]
+
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
+                            if str(reaction) == accept:
+                                await message.send('{} agreed.'.format(player.name))
+                            elif str(reaction) == decline:
+                                await message.send('{} disagreed. Replay card'.format(player.name))
+                                getDecline = False
+                        except asyncio.TimeoutError:
+                            await message.send('{} did not vote so count as agreed 🤡'.format(player.name))
+
+                    if getDecline == True:
+                        if hand:
+                            for i in response_list:
+                                hand.remove(i)
+                            await player.send('This is your card in hand now.'.format(hand))
+                        elif not hand:
+                            win = 1
+                            await message.send('🥳 {} wins! 🥳'.format(player.mention))
                                 
     await message.send('Confirming result 👾 ...')
     await asyncio.sleep(4)
