@@ -503,7 +503,7 @@ Have some sportsmanship or 'gambleship'? 👻
                         elif response.content not in playerhand[x]:
                             await message.send('You sure the card is in your hand? 😐')
                 
-                vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏".format(player.name))
+                vote = await message.send("Voting Round\nDo you agree with {}'s card?\n```{}``` 😏".format(player.name, response_list))
                 for vote_emoji in [accept, decline]:
                     await vote.add_reaction(vote_emoji)
 
@@ -516,7 +516,7 @@ Have some sportsmanship or 'gambleship'? 👻
                         if str(reaction) == accept:
                             await message.send('{} agreed.'.format(player.name))
                         elif str(reaction) == decline:
-                            await message.send('{} disagreed.'.format(player.name))
+                            await message.send('{} disagreed. Replay card'.format(player.name))
                             getDecline = False
                     except asyncio.TimeoutError:
                         await message.send('{} did not vote so count as agreed 🤡'.format(player.name))
