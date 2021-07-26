@@ -519,13 +519,14 @@ Have some sportsmanship or 'gambleship'? 👻
                     except asyncio.TimeoutError:
                         await message.send('{} did not vote so count as agreed 🤡'.format(player.name))
 
-            if playerhand[x]:
-                for i in response_list:
-                    playerhand[x].remove(i)
-                await player.send('This is your card in hand now.'.format(playerhand))
-            elif not playerhand[x]:
-                win = 1
-                await message.send('🥳 {} wins! 🥳'.format(player.mention))
+                if getDecline == True:
+                    if playerhand[x]:
+                        for i in response_list:
+                            playerhand[x].remove(i)
+                        await player.send('This is your card in hand now.'.format(playerhand))
+                    elif not playerhand[x]:
+                        win = 1
+                        await message.send('🥳 {} wins! 🥳'.format(player.mention))
                                 
     await message.send('Confirming result 👾 ...')
     await asyncio.sleep(4)
