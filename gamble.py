@@ -498,7 +498,6 @@ Have some sportsmanship or 'gambleship'? 👻
                         if response.content in playerhand[x]:
                             response_list.append(response.content)
                             countcard = countcard + 1
-                            nocard = nocard - 1
                         elif response.content not in playerhand[x]:
                             await message.send('You sure the card is in your hand? 😐')
                 
