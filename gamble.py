@@ -460,12 +460,12 @@ Have some sportsmanship or 'gambleship'? 👻
     while win == 0:
         for player in players:
             x = players.index(player)
+            playcard = 0
+            countcard = 0
+            response_list = []
             getDecline = False
             while getDecline == False:
                 getDecline = True
-                playcard = 0
-                countcard = 0
-                response_list = []
                 play = await message.send("{}'s turn.\nHow many cards should you play? 🤔".format(player.mention))
                 for play_emoji in [one, two, three, four, five, cancel]:
                     await play.add_reaction(play_emoji)
