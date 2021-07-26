@@ -411,24 +411,24 @@ Have some sportsmanship or 'gambleship'? 👻
     four = '4️⃣'
     five = '5️⃣'
 
-    ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
-    await ready.add_reaction(join)
-    await ready.add_reaction(cancel)
+    #ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
+    #await ready.add_reaction(join)
+    #await ready.add_reaction(cancel)
 
-    for player in players:
-        def checkReady(reaction, user):
-            return user == player and str(reaction) in [join, cancel]
+    #for player in players:
+        #def checkReady(reaction, user):
+            #return user == player and str(reaction) in [join, cancel]
         
-        try:
-            reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkReady)
-            if str(reaction) == join:
-                await message.send('{} joined 🤩'.format(player.name))
-            elif str(reaction) == cancel:
-                await message.send('{} rejected 😠'.format(player.name))
-                return
-        except asyncio.TimeoutError:
-            await message.send('Someone did not join. Game cancelled.')
-            return
+        #try:
+            #reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkReady)
+            #if str(reaction) == join:
+                #await message.send('{} joined 🤩'.format(player.name))
+            #elif str(reaction) == cancel:
+                #await message.send('{} rejected 😠'.format(player.name))
+                #return
+        #except asyncio.TimeoutError:
+            #await message.send('Someone did not join. Game cancelled.')
+            #return
 
     await message.send('Be ready ✔️ ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
 
