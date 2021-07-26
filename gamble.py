@@ -385,13 +385,6 @@ async def texaspoker(message, *name: discord.Member):
 # Landlord for and only four
 @bot.command(aliases = ['ll'])
 async def landlord(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member, fourthName: discord.Member):
-    await message.send('''
-This is a complicated game, so be prepared and understand the rules beforehand 😌 
-Card(s) played is/are validated by players' votes 🤫
-Have some sportsmanship or 'gambleship'? 👻
-''')
-    await asyncio.sleep(5)
-
     firstName_hand = []
     secondName_hand = []
     thirdName_hand = []
@@ -410,6 +403,14 @@ Have some sportsmanship or 'gambleship'? 👻
     three = '3️⃣'
     four = '4️⃣'
     five = '5️⃣'
+    
+    await message.send('''
+This is a complicated game, so be prepared and understand the rules beforehand 😌 
+Card(s) played is/are validated by players' votes 🤫
+Have some sportsmanship or 'gambleship'? 👻
+Cycle: {}
+'''.format(players))
+    await asyncio.sleep(5)
 
     #ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
     #await ready.add_reaction(join)
