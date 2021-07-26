@@ -491,9 +491,8 @@ Have some sportsmanship or 'gambleship'? 👻
                     playcard = 0
                     await message.send("Time's up. {} lost a turn 😕".format(player.name))
                 
-                nocard = playcard
                 while countcard != playcard:
-                    await message.send('Play your card(s) one message at a time 🤡 {} left.'.format(nocard))
+                    await message.send('Play your card(s) one message at a time 🤡')
                     response = await bot.wait_for('message', timeout = 120.0, check = None)
                     if message.author.id == player.id:
                         if response.content in playerhand[x]:
@@ -503,7 +502,7 @@ Have some sportsmanship or 'gambleship'? 👻
                         elif response.content not in playerhand[x]:
                             await message.send('You sure the card is in your hand? 😐')
                 
-                vote = await message.send("Voting Round\nDo you agree with {}'s card?\n```{}``` 😏".format(player.name, response_list))
+                vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏\n```{}``` ".format(player.name, response_list))
                 for vote_emoji in [accept, decline]:
                     await vote.add_reaction(vote_emoji)
 
