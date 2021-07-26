@@ -385,10 +385,19 @@ async def texaspoker(message, *name: discord.Member):
 # Landlord for and only four
 @bot.command(aliases = ['ll'])
 async def landlord(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member, fourthName: discord.Member):
-    await message.send('This is a complicated game, so be prepared and understand the rules beforehand.')
+    await message.send('''
+This is a complicated game, so be prepared and understand the rules beforehand 😌 
+Card(s) played is/are validated by players' votes 🤫
+Have some sportsmanship or 'gambleship'? 👻
+''')
     await asyncio.sleep(5)
 
+    firstName_hand = []
+    secondName_hand = []
+    thirdName_hand = []
+    fourthName_hand = []
     players = [firstName, secondName, thirdName, fourthName]
+    playerhand = [firstName_hand, secondName_hand, thirdName_hand, fourthName_hand]
 
     join = '✅'
     cancel = '❎'
@@ -402,8 +411,138 @@ async def landlord(message, firstName: discord.Member, secondName: discord.Membe
     four = '4️⃣'
     five = '5️⃣'
 
-                        
-    await asyncio.sleep(4)
-    await message.send("THE SCOREBOARD\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
+    ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
+    await ready.add_reaction(join)
+    await ready.add_reaction(cancel)
+
+    for player in players:
+        def checkReady(reaction, user):
+            return user == player and str(reaction) in [join, cancel]
+        
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkReady)
+            if str(reaction) == join:
+                await message.send('{} joined 🤩'.format(player.name))
+            elif str(reaction) == cancel:
+                await message.send('{} rejected 😠'.format(player.name))
+                return
+        except asyncio.TimeoutError:
+            await message.send('Someone did not join. Game cancelled.')
+            return
+
+    await message.send('Be ready ✔️ ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
+
+    deck = [
+'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'DJ', 'DQ', 'DK',
+'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'CJ', 'CQ', 'CK',
+'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'HJ', 'HQ', 'HK',
+'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'SJ', 'SQ', 'SK',
+]
     
+    for i in range(0, 13):
+        random.shuffle(deck)
+        a = random.choice(deck)
+        firstName_hand.append(a)
+        deck.remove(a)
+        random.shuffle(deck)
+        b = random.choice(deck)
+        secondName_hand.append(b)
+        deck.remove(b)
+        random.shuffle(deck)
+        c = random.choice(deck)
+        thirdName_hand.append(c)
+        deck.remove(c)
+        random.shuffle(deck)
+        d = random.choice(deck)
+        fourthName_hand.append(d)
+        deck.remove(d)
+
+    await firstName.send('Here is your card in hand.\n{}'.format(firstName_hand))
+    await secondName.send('Here is your card in hand.\n{}'.format(secondName_hand))
+    await thirdName.send('Here is your card in hand.\n{}'.format(thirdName_hand))
+    await fourthName.send('Here is your card in hand.\n{}'.format(fourthName_hand))
+
+    await asyncio.sleep(5)
+                        
+    await message.send('🎲 Game Commenced 🎲')
+
+    win = 0
+    
+    while win == 0:
+        for player in players:
+            x = players.index(player)
+            getDecline = False
+            while getDecline == False:
+                getDecline = True
+                playcard = 0
+                countcard = 0
+                response_list = []
+                play = await message.send("{}'s turn.\nHow many cards should you play? 🤔".format(player.mention))
+                for play_emoji in [one, two, three, four, five, cancel]:
+                    await play.add_reaction(play_emoji)
+
+                def checkPlay(reaction, user):
+                    return user == player and str(reaction) in [one, two, three, four, five, cancel]
+                
+                try:
+                    reaction, user = await bot.wait_for('reaction_add', timeout = 120.0, check = checkPlay)
+                    if str(reaction) == one:
+                        playcard = 1
+                    elif str(reaction) == two:
+                        playcard = 2
+                    elif str(reaction) == three:
+                        playcard = 3
+                    elif str(reaction) == four:
+                        playcard = 4
+                    elif str(reaction) == five:
+                        playcard = 5
+                    elif str(reaction) == cancel:
+                        playcard = 0
+                except asyncio.TimeoutError:
+                    playcard = 0
+                    await message.send("Time's up. {} lost a turn 😕".format(firstName))
+                
+                nocard = playcard
+                while countcard != playcard:
+                    await message.send('Play your card(s) one message at a time 🤡 {} left.'.format(nocard))
+                    response = await bot.wait_for('message', timeout = 120.0, check = None)
+                    if message.author.id == player.id:
+                        if response.content in playerhand[x]:
+                            response_list.append(response.content)
+                            countcard = countcard + 1
+                            nocard = nocard - 1
+                        elif response.content not in playerhand[x]:
+                            await message.send('You sure the card is in your hand? 😐')
+                
+                vote = await message.send("Voting Round\nDo you agree with {}'s card? 😏".format(player.name))
+                for vote_emoji in [accept, decline]:
+                    await vote.add_reaction(vote_emoji)
+                for player in players:
+                    def checkVote(reaction, user):
+                        return user == player and str(reaction) in [accept, decline]
+                    
+                    try:
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkVote)
+                        if str(reaction) == accept:
+                            await message.send('{} agreed.'.format(player.name))
+                        elif str(reaction) == decline:
+                            await message.send('{} disagreed.'.format(player.name))
+                            getDecline = False
+                    except asyncio.TimeoutError:
+                        await message.send('{} did not vote so count as agreed 😛'.format(player.name))
+                    
+            if playerhand[x]:
+                for i in response_list:
+                    playerhand[x].remove(i)
+                await player.send('This is your card in hand now.'.format(playerhand))
+            elif not playerhand[x]:
+                win = 1
+                await message.send('🥳 {} wins! 🥳'.format(player.mention))
+                                
+    await message.send('Confirming result 👾 ...')
+    await asyncio.sleep(4)
+    await message.send(" 💸 THE SCOREBOARD 💸\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
+    
+
+
 bot.run(os.environ.get('BOT_SECRET_TOKEN'))
