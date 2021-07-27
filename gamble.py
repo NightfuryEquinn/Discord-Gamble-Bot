@@ -50,6 +50,7 @@ Chapter 1 - 🎭 Blackjack / 21点
 Classic! 
 Get 21 to win and don't explode yourself 💣
 Card given one at a time 😇. No hurries.
+p/s: Jack, Queen, King are counted as 10, but reduced chances.
 ```
 gb bj @p1 @... -- No limit of players
 🎴 Hit 🛑 Hold
@@ -57,6 +58,7 @@ gb bj @p1 @... -- No limit of players
 '''.format(name), 
 color = random.choice(colors))
     bj_rules.set_thumbnail(url = avatar)
+    bj_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
 
 # Texas Poker Page
     tp_rules = discord.Embed(
@@ -89,12 +91,13 @@ Single Pair 1️⃣ [♦️ A ♣️ A]
 '''.format(name), 
 color = random.choice(colors))
     tp_rules.set_thumbnail(url = avatar)
+    tp_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
 
-# LandLord Page
-    ll_rules = discord.Embed(
+# Chodaidi Page
+    cdd_rules = discord.Embed(
 title = 'No-Currency Gamble Bot Handbook 📙', 
 description = '''
-{} finished reading. Remember to put back the book to the shelf 🙄.
+{} is stilllll reading ~~~ 😬
 
 Chapter 3 - 🃏 ChoDaiDi / 锄大第
 
@@ -102,9 +105,9 @@ Legendary card game!
 With a twist of voting the card(s) played 😲. 
 Each player has 13 cards. Turns according to tag mention.
 Whoever empty the hand, wins 😎! 
-2 is the boss, 3 is the servant here.
+2 is the boss, 3 is the servant here. Suits are relevant.
 ```
-gb ll @p1 @p2 @p3 @p4 -- Must and only four players
+gb cdd @p1 @p2 @p3 @p4 -- Must and only four players
 ✅ Join game ❎ Cancel game 👌 Agree 💩 Decline 
 1️⃣ Single 2️⃣ Double 3️⃣ Triple 4️⃣ Four 5️⃣ FIVE
 ```
@@ -122,8 +125,70 @@ Single
 ```
 '''.format(name), 
 color = random.choice(colors))
-    ll_rules.set_thumbnail(url = avatar)
-    ll_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
+    cdd_rules.set_thumbnail(url = avatar)
+    cdd_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
+
+# Doudizhu Page
+    ddz_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📒',
+description = '''
+{} is confused about ChoDaidi and DouDiZhu 😵
+
+Chapter 4 - DouDiZhu / 斗地主
+
+Another legendary card game! But more advanced 😳
+With a twist of voting the card(s) played. Again.
+Each player has 17 cards.
+3 cards remaining goes whoever called for Landlord after shown to all players.
+2 players (Peasant Team) 👩🏻‍🌾 compete against the Landlord 🤴🏻
+Landlord wins if hand emptied, vice versa.
+CJ is the boss, 3 is the servant here. Suits are irrelevant 😎
+```
+gb ddz @p1 @p2 @p3 -- Must and only three players
+✅ Join game ❎ Cancel game 👌 Agree 💩 Decline 
+```
+```
+SCORETABLE 💱 Largest to Smallest
+Nuke 💣 [Double Joker]
+Bomb 🧨 [Four of a Kind]
+Large Space Shuttle 🚀 [2 or more Four of a Kind + Pairs]
+Small Space Shuttle 🚀 [2 or more Four of a Kind + Single]
+Space Shuttle 🚀 [2 or more Four of a Kind]
+Pairs Four 
+Single Four
+Large Airplane ✈️ [2 or more Trio + Pairs]
+Small Airplane ✈️ [2 or more Trio + Single]
+Airplane ✈️ [2 or more Trio]
+Trio 
+Trio 
+Pairs
+Single
+```
+'''.format(name),
+color = random.choice(colors))
+    ddz_rules.set_thumbnail(url = avatar)
+    ddz_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
+
+# Match Ten Page
+    mt_rules = discord.Embed(
+title = 'No-Currency Gamble Bot Handbook 📕',
+description = '''
+{} finished reading. Remember to put back the book to the shelf 🙄.
+
+Chapter 5 - Match Ten / 合十
+
+Casual luck game.
+Match a pair of cards and make a TEN.
+Pair of Jack, Queen, King, respectively are TEN.
+First to clear hand, wins!
+```
+gb mt @p1 @p2 @p3 @ p4 -- Must and only four players
+```
+'''.format(name),
+color = random.choice(colors))
+    mt_rules.set_thumbnail(url = avatar)
+    mt_rules.set_footer(text = 'Any bugs or issues, dm or pm or whatever message me: Nightfury#8826 🥰')
+
 
     page = 1
     m = await message.send(embed = bj_rules)
@@ -141,10 +206,10 @@ color = random.choice(colors))
             if str(reaction) == left:
                 page = page - 1
                 if page < 1:
-                    page = 3
+                    page = 5
             elif str(reaction) == right:
                 page = page + 1
-                if page > 3:
+                if page > 5:
                     page = 1
 
             if page == 1:
@@ -152,7 +217,11 @@ color = random.choice(colors))
             elif page == 2:
                 await m.edit(embed = tp_rules)
             elif page == 3:
-                await m.edit(embed = ll_rules)
+                await m.edit(embed = cdd_rules)
+            elif page == 4:
+                await m.edit(embed = ddz_rules)
+            elif page == 5:
+                await m.edit(embed = mt_rules)
         except asyncio.TimeoutError:
             await message.send('{} put the book back already. Take it out again if you want to read 😊.'.format(name))
             break
