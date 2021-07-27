@@ -411,24 +411,24 @@ Have some sportsmanship or 'gambleship'? 👻
 ''')
     await asyncio.sleep(5)
 
-    #ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
-    #await ready.add_reaction(join)
-    #await ready.add_reaction(cancel)
+    ready = await message.send('All must react for the game to start 👀\nReact accordingly to mention')
+    await ready.add_reaction(join)
+    await ready.add_reaction(cancel)
 
-    #for player in players:
-        #def checkReady(reaction, user):
-            #return user == player and str(reaction) in [join, cancel]
+    for player in players:
+        def checkReady(reaction, user):
+            return user == player and str(reaction) in [join, cancel]
         
-        #try:
-            #reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkReady)
-            #if str(reaction) == join:
-                #await message.send('{} joined 🤩'.format(player.name))
-            #elif str(reaction) == cancel:
-                #await message.send('{} rejected 😠'.format(player.name))
-                #return
-        #except asyncio.TimeoutError:
-            #await message.send('Someone did not join. Game cancelled.')
-            #return
+        try:
+            reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkReady)
+            if str(reaction) == join:
+                await message.send('{} joined 🤩'.format(player.name))
+            elif str(reaction) == cancel:
+                await message.send('{} rejected 😠'.format(player.name))
+                return
+        except asyncio.TimeoutError:
+            await message.send('Someone did not join. Game cancelled.')
+            return
 
     await message.send('Be ready ✔️ ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
 
@@ -535,5 +535,4 @@ Have some sportsmanship or 'gambleship'? 👻
     await message.send(" 💸 THE SCOREBOARD 💸\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.\n{}\n{} card(s) left.".format(firstName, len(firstName_hand), secondName, len(secondName_hand), thirdName, len(thirdName_hand), fourthName, len(fourthName_hand)))
     
 
-bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.n0gKE_DNLR9PqXi4TTqc723gxBs')
-#bot.run(os.environ.get('BOT_SECRET_TOKEN'))
+bot.run(os.environ.get('BOT_SECRET_TOKEN'))
