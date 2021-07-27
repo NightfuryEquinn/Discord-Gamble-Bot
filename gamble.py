@@ -134,7 +134,7 @@ title = 'No-Currency Gamble Bot Handbook 📒',
 description = '''
 {} is confused about ChoDaidi and DouDiZhu 😵
 
-Chapter 4 - DouDiZhu / 斗地主
+Chapter 4 - 🧧 DouDiZhu / 斗地主
 
 Another legendary card game! But more advanced 😳
 With a twist of voting the card(s) played. Again.
@@ -175,7 +175,7 @@ title = 'No-Currency Gamble Bot Handbook 📕',
 description = '''
 {} finished reading. Remember to put back the book to the shelf 🙄.
 
-Chapter 5 - Match Ten / 合十
+Chapter 5 - 🔟 Match Ten / 合十
 
 Casual luck game.
 Match a pair of cards and make a TEN.
