@@ -533,6 +533,7 @@ Have some sportsmanship or 'gambleship'? 👻
             while getDecline == False:
                 playcard = 0
                 countcard = 0
+                nocard = 0
                 response_list = []
                 getDecline = True
                 play = await message.send("{}'s turn.\nHow many cards should you play? 🤔".format(player.mention))
@@ -560,13 +561,15 @@ Have some sportsmanship or 'gambleship'? 👻
                     playcard = 0
                     await message.send("Time's up. {} lost a turn 😕".format(player.name))
                 
+                nocard = playcard
                 while countcard != playcard:
-                    await message.send('Play your card(s) one message at a time 🤡')
+                    await message.send('Play your card(s) one message at a time 🤡 {} left.'.format(nocard))
                     response = await bot.wait_for('message', timeout = 120.0, check = None)
                     if message.author.id == player.id:
                         if response.content in playerhand[x]:
                             response_list.append(response.content)
                             countcard = countcard + 1
+                            nocard = nocard - 1
                         elif response.content not in playerhand[x]:
                             await message.send('You sure the card is in your hand? 😐')
                     else:
