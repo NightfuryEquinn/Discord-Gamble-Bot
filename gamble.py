@@ -182,7 +182,7 @@ Match a pair of cards and make a TEN.
 Pair of Jack, Queen, King, respectively are TEN.
 First to clear hand, wins!
 ```
-gb mt @p1 @... @p10 - Max 10 players
+gb mt @p1 @... @p10 - Max of 10 players
 ```
 '''.format(name),
 color = random.choice(colors))
