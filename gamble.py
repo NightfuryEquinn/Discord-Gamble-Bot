@@ -790,5 +790,4 @@ async def matchten(message, *name: discord.Member):
 
 
 # Execute bot 
-bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.dLUqyyvrtclbYbgbgMhWGSdqMO4')
-os.environ.get('BOT_SECRET_TOKEN')
+bot.run(os.environ.get('BOT_SECRET_TOKEN'))
