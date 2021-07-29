@@ -789,5 +789,5 @@ async def matchten(message, *name: discord.Member):
 
 
 
-# Execute bot 
+# Execute bot run
 bot.run(os.environ.get('BOT_SECRET_TOKEN'))
