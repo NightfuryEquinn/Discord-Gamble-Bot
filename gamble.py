@@ -618,6 +618,14 @@ Have some sportsmanship or 'gambleship'? 👻
 async def doudizhu(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member):
     await message.send('Under dev.')
 
+    deck = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 'J', 'J', 'J', 'J', 'Q', 'Q', 'Q', 'Q', 'K', 'K', 'K', 'K', 'BW', 'CJ']
+
+
+
+
+
+
+
 
 # Match Ten 
 @bot.command(aliases = ['mt'])
@@ -634,8 +642,8 @@ async def matchten(message, *name: discord.Member):
     await asyncio.sleep(5)
 
     deck = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 69]
-    pickplayeremojis = ['🥮', '🍣', '🍱', '🍙', '🍩', '🌮', '🥗', '🥘', '☕️', '🍵']
-    pickcardemojis = ['🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🐓', '🦃', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🐚', '🌾', '💐', '🌷', '🌹', '🥀', '🌺', '🌸', '🌼', '🌻', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌙', '🌎', '🌍', '🌏', '🪐', '💫', '⭐️', '🌟', '✨', '⚡️', '☄️', '💥', '🔥']
+    pickplayeremojis = ['🥮', '🍣', '🍱', '🍙', '🍩', '🌮', '🥗', '🥘', '🐷', '🍵']
+    pickcardemojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵']
 
     players = []
     playerhand = []
@@ -648,10 +656,13 @@ async def matchten(message, *name: discord.Member):
 # Shuffle card and distribute and send
     while deck:
         for hand in playerhand:
-            random.shuffle(deck)
-            a = random.choice(deck)
-            hand.append(a)
-            deck.remove(a)
+            try:
+                random.shuffle(deck)
+                a = random.choice(deck)
+                hand.append(a)
+                deck.remove(a)
+            except IndexError:
+                pass
     
     await asyncio.sleep(2)
 
@@ -679,10 +690,10 @@ async def matchten(message, *name: discord.Member):
                         play = await bot.wait_for('message', timeout = 120.0, check = None)
                         if message.author != bot.user:
                             if play.author.id == player.id:
-                                if play.content in playerhand[x]:
-                                    played.append(play.content)
+                                if int(play.content) in playerhand[x]:
+                                    played.append(int(play.content))
                                     playround = playround + 1
-                                elif play.content not in playerhand[x]:
+                                elif int(play.content) not in playerhand[x]:
                                     await message.send('HO! You think you can fool me. Think again.')
                             elif play.author.id != player.id:
                                 await message.send("Nowadays, people are very impatient, aren't they?")
@@ -717,7 +728,7 @@ async def matchten(message, *name: discord.Member):
                 for i in range(0, len(name)):
                     a = random.choice(pickplayeremojis)
                     checkplayeremoji.append(a)
-                    pickplayer.add_reaction(a)
+                    await pickplayer.add_reaction(a)
                 
                 def checkpickplayer(reaction, user):
                     return user == player and str(reaction) in checkplayeremoji
@@ -726,14 +737,16 @@ async def matchten(message, *name: discord.Member):
                     reaction, user = await bot.wait_for('reaction_add', timeout = 180.0, check = checkpickplayer)
                     if str(reaction) in checkplayeremoji:
 # Pick the player card
-                        y = random.choice(players)
+                        y = player
+                        while y == player:
+                            y = random.choice(players)
                         z = players.index(y)
                         pickcard = await message.send("Pick a card from {}'s deck, {}.".format(y.name, player.mention))
                         checkcardemoji = []
                         for i in range(0, len(playerhand[z])):
                             b = random.choice(pickcardemojis)
                             checkcardemoji.append(b)
-                            pickcard.add_reaction(b)
+                            await pickcard.add_reaction(b)
                         
                         def checkpickcard(reaction, user):
                             return user == player and str(reaction) in checkcardemoji
@@ -775,5 +788,7 @@ async def matchten(message, *name: discord.Member):
 
 
 
+
 # Execute bot 
-bot.run(os.environ.get('BOT_SECRET_TOKEN'))
+bot.run('ODU5MDM5NzkzOTQ2NDI3Mzky.YNm5Jw.dLUqyyvrtclbYbgbgMhWGSdqMO4')
+os.environ.get('BOT_SECRET_TOKEN')
