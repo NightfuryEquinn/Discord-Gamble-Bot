@@ -810,10 +810,10 @@ async def matchten(message, *name: discord.Member):
                             await message.send('WTH? {}? REplay'.format(sum(played)))
                             getDecline = False
 # Finalizing and resend card in hand
-                if played:
-                    for i in played:
-                        playerhand[x].remove(i)
-                    await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
+                    if played:
+                        for i in played:
+                            playerhand[x].remove(i)
+                        await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
 # Check for winner
         for winner in players:
             x = players.index(winner)
