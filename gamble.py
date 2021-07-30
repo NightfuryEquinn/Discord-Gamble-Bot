@@ -786,9 +786,9 @@ async def matchten(message, *name: discord.Member):
                                         if int(response.content) in playerhand[x]:
                                             played.append(int(response.content))
                                             playround = playround + 1
-                                        elif int(response.content) not in playerhand[x]:
+                                        if int(response.content) not in playerhand[x]:
                                             await message.send('HA! You think you can fool me? Think thrice.')
-                                        elif str(response.content) == 'Skip':
+                                        if str(response.content) == 'Skip':
                                             await message.send('{} skipped.'.format(player))
                                             playround = 2
                                             getSum = True
