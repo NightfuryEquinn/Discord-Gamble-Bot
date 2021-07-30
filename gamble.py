@@ -784,7 +784,7 @@ async def matchten(message, *name: discord.Member):
                                 if response.author != bot.user:
                                     if response.author.id == player.id:
                                         if int(response.content) in playerhand[x]:
-                                            played.append(response.content)
+                                            played.append(int(response.content))
                                             playround = playround + 1
                                         elif int(response.content) not in playerhand[x]:
                                             await message.send('HA! You think you can fool me? Think thrice.')
@@ -800,6 +800,8 @@ async def matchten(message, *name: discord.Member):
                             getSum = True
                     
                     if getSum == False:
+                        for i in played:
+                            int(i)
                         if sum(played) == 10:
                             await message.send('Yes, a 10!')
                         elif played[0] == 10 and played[1] == 10:
