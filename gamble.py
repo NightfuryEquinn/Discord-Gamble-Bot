@@ -184,6 +184,7 @@ First to clear hand after deck is empty, wins!
 ```
 gb mt @p1 @... @p10 - Min of 3 players / Max of 10 players
 🤹 Pick 🃏 Draw
+Skip to Skip
 ```
 '''.format(name),
 color = random.choice(colors))
@@ -755,7 +756,7 @@ async def matchten(message, *name: discord.Member):
                         p = random.choice(deck)
                         playerhand[x].append(p)
                         deck.remove(p)
-                        await player.send('This is your card in hand.\n'.format(playerhand[x]))
+                        await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
                     elif not deck:
                         await message.send('No card in deck already. Best I help you pick a card from other. YRW ~')
                         pickplayer2 = player
@@ -787,6 +788,10 @@ async def matchten(message, *name: discord.Member):
                                             playround = playround + 1
                                         elif response.content not in playerhand[x]:
                                             await message.send('HA! You think you can fool me? Think thrice.')
+                                        elif response.content == 'Skip':
+                                            await message.send('{} skipped.'.format(player))
+                                            playround = 2
+                                            getSum = True
                                     elif response.author.id != player.id:
                                         await message.send("Nowadays, people are very impatient, aren't they?")
                         except asyncio.TimeoutError:
@@ -803,9 +808,10 @@ async def matchten(message, *name: discord.Member):
                             await message.send('WTH? {}? REplay'.format(sum(played)))
                             getDecline = False
 # Finalizing and resend card in hand
-                for i in played:
-                    playerhand[x].remove(i)
-                await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
+                if played:
+                    for i in played:
+                        playerhand[x].remove(i)
+                    await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
 # Check for winner
         for winner in players:
             x = players.index(winner)
