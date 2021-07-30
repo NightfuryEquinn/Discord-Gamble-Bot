@@ -180,9 +180,10 @@ Chapter 5 - 🔟 Match Ten / 合十
 Casual luck game.
 Match a pair of cards and make a TEN.
 Pair of Jack, Queen, King, respectively are TEN.
-First to clear hand, wins!
+First to clear hand after deck is empty, wins!
 ```
-gb mt @p1 @... @p10 - Max of 10 players
+gb mt @p1 @... @p10 - Min of 3 players / Max of 10 players
+🤹 Pick 🃏 Deck
 ```
 '''.format(name),
 color = random.choice(colors))
@@ -637,12 +638,14 @@ async def matchten(message, *name: discord.Member):
         await message.send('Minimum 3 players.')
         return
     else:
-        await message.send('Loading...')
+        await message.send('Loading... Prepare yourself')
 
     await asyncio.sleep(5)
 
+    pick = '🤹'
+    deck = '🃏'
     deck = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 69]
-    pickplayeremojis = ['🥮', '🍣', '🍱', '🍙', '🍩', '🌮', '🥗', '🥘', '🐷', '🍵']
+    pickplayeremojis = ['🥮', '🍣', '🍱', '🍙', '🍩', '🌮', '🥗', '🥘', '🍵', '🍡']
     pickcardemojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵']
 
     players = []
@@ -654,15 +657,12 @@ async def matchten(message, *name: discord.Member):
     for hand in playerhand:
         hand.clear()
 # Shuffle card and distribute and send
-    while deck:
+    for i in range(0, 5):
         for hand in playerhand:
-            try:
-                random.shuffle(deck)
-                a = random.choice(deck)
-                hand.append(a)
-                deck.remove(a)
-            except IndexError:
-                pass
+            random.shuffle(deck)
+            a = random.choice(deck)
+            hand.append(a)
+            deck.remove(a)
     
     await asyncio.sleep(2)
 
@@ -675,116 +675,146 @@ async def matchten(message, *name: discord.Member):
 # Loop while no hand is empty
     win = 0
     while win == 0:
+        await message.send('{} card(s) left in deck.'.format(len(deck)))
         for player in players:
             x = players.index(player)
-            getDecline = False
-            getSkip = False
-            while getDecline == False:
-                getDecline = True
-                await message.send("{}'s turn. Play your cards one by one.".format(player.mention))
-# PLay card that add up to ten
-                played = []
-                playround = 0
-                try:
-                    while playround != 2:
-                        play = await bot.wait_for('message', timeout = 120.0, check = None)
-                        if message.author != bot.user:
-                            if play.author.id == player.id:
-                                if int(play.content) in playerhand[x]:
-                                    played.append(int(play.content))
-                                    playround = playround + 1
-                                elif int(play.content) not in playerhand[x]:
-                                    await message.send('HO! You think you can fool me. Think again.')
-                            elif play.author.id != player.id:
-                                await message.send("Nowadays, people are very impatient, aren't they?")
-                        else:
-                            pass
-                except asyncio.TimeoutError:
-                    await message.send("You lost your turn, {}.".format(player.mention))
-                    getSkip = True
-# Check card
-                if getSkip == False:
-                    if sum(played) == 10:
-                        await message.send('TEN!')
-                        for i in played:
-                            playerhand[x].remove(i)
-                    elif 10 in played:
-                        if played[0] == 10 and played[1] == 10:
-                            await message.send('PAIR TEN!')
-                            for i in played:
-                                playerhand[x].remove(i)
-                        else:
-                            await message.send('{}? WTH'.format(sum(played)))
-                            getDecline = False
-                    else:
-                        await message.send('{}? WTH'.format(sum(played)))
-                        getDecline = False
+            requestPick = False
+            requestDeck = False
+            chooseTimeout = False
+            pickplayerTimeout = False
+            pickcardTimeout = False
+            deckTimeout = False
+            if 69 in playerhand[x]:
+                await message.send('JOKER is here! HAH!')
+            else:
+                await message.send('Normal person.')
+# Choose to pick from player or pick from deck
+            choose = await message.send('Pick or Deck? {}'.format(player.mention))
+            for choose_emoji in [pick, deck]:
+                await choose.add_reaction(choose_emoji)
             
-            await asyncio.sleep(2)
-# Pick a player
-            if getSkip == False:
-                pickplayer = await message.send("Pick a random player, {}.".format(player.mention))
-                checkplayeremoji = []
-                for i in range(0, len(name)):
-                    a = random.choice(pickplayeremojis)
-                    checkplayeremoji.append(a)
-                    await pickplayer.add_reaction(a)
-                
-                def checkpickplayer(reaction, user):
-                    return user == player and str(reaction) in checkplayeremoji
-                
-                try:
-                    reaction, user = await bot.wait_for('reaction_add', timeout = 180.0, check = checkpickplayer)
-                    if str(reaction) in checkplayeremoji:
-# Pick the player card
-                        y = player
-                        while y == player:
-                            y = random.choice(players)
-                        z = players.index(y)
-                        pickcard = await message.send("Pick a card from {}'s deck, {}.".format(y.name, player.mention))
-                        checkcardemoji = []
-                        for i in range(0, len(playerhand[z])):
-                            b = random.choice(pickcardemojis)
-                            checkcardemoji.append(b)
-                            await pickcard.add_reaction(b)
-                        
-                        def checkpickcard(reaction, user):
-                            return user == player and str(reaction) in checkcardemoji
+            def checkchoose(reaction, user):
+                return user == player and str(reaction) in [pick, deck]
 
-                        reaction, user = await bot.wait_for('reaction_add', timeout = None, check = checkpickcard)
-                        if str(reaction) in checkcardemoji:
-                            j = random.choice(playerhand[z])
-                            playerhand[x].append(j)
-                            playerhand[z].remove(j)
-                except asyncio.TimeoutError:
-                    await message.send("Time's up, next!")
+            try:
+                reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkchoose)
+                if str(reaction) == pick:
+                    requestPick = True
+                elif str(reaction) == deck:
+                    requestDeck = True
+            except asyncio.TimeoutError:
+                await message.send('{} lost a turn.'.format(player.name))
+                chooseTimeout = True
 
-            elif getSkip == True:
-                await message.send('You did not play your card just now, so you are skipped. Wait for next round.')
+            if chooseTimeout == False:
+                if requestPick == True:
+                    pickm = await message.send('Pick a random player, {}.'.format(player.mention))
+                    for i in range(0, len(name)):
+                        await pickm.add_reaction(random.choice(pickplayeremojis))
+                    
+                    def checkpickplayer(reaction, user):
+                        return user == player and str(reaction) in pickplayeremojis
 
-# Finalizing and resend hand and check if empty
-            if getDecline == True:
+                    try:
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkpickplayer)
+                    except asyncio.TimeoutError:
+                        await message.send('Seriously? No reaction?')
+                        pickplayerTimeout = True
+                    
+                    if pickplayerTimeout == False:
+                        pickplayer1 = player
+                        while pickplayer1 == player:
+                            pickplayer1 = random.choice(players)
+                        y = players.index(pickplayer1)
+                        pickplayerm = await message.send("Pick a card from {}'s deck.".format(pickplayer1.name))
+                        for i in range(0, len(playerhand[y])):
+                            await pickplayerm.add_reaction(random.choice(pickcardemojis))
+
+                        def checkpickplayerm(reaction, user):
+                            return user == player and str(reaction) in pickcardemojis
+
+                        try:
+                            reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkpickplayerm)
+                            if str(reaction) in pickcardemojis:
+                                t = random.choice(playerhand[y])
+                                playerhand[x].append(t)
+                                playerhand[y].remove(t)
+                        except asyncio.TimeoutError:
+                            t = random.choice(playerhand[y])
+                            playerhand[x].append(t)
+                            playerhand[y].remove(t)
+                            await message.send('...!@%^*&^$#$. If there is a Joker in your hand, do not blame me.')
+                    
+                    await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
+                    await pickplayer1.send('This is your card in hand.\n{}'.format(playerhand[y]))
+                    
+                if requestDeck == True:
+                    if deck:
+                        await message.send('{} picked a card from deck.'.format(player.name))
+                        random.shuffle(deck)
+                        p = random.choice(deck)
+                        playerhand[x].append(p)
+                        deck.remove(p)
+                        await player.send('This is your card in hand.\n'.format(playerhand[x]))
+                    elif not deck:
+                        await message.send('No card in deck already. Best I help you pick a card from other. YRW ~')
+                        pickplayer2 = player
+                        while pickplayer2 == player:
+                            pickplayer2 = random.choice(players)
+                        z = players.index(pickplayer2)
+                        u = random.choice(playerhand[z])
+                        playerhand[x].append(u)
+                        playerhand[z].remove(u)
+                        await player.send('This is your card in hand.\n'.format(playerhand[x]))
+                        await pickplayer2.send('This is your card in hand.\n'.format(playerhand[z]))
+# Play card that match ten
+                await asyncio.sleep(4)
+                await message.send("{} play pair of card to match ten.".format(player.mention))
+                getDecline = False
+                getSum = False
+                while getDecline == False:
+                    getDecline = True
+                    played = []
+                    playround = 0
+                    while playround != 2:
+                        try:
+                            response = await bot.wait_for('message', timeout = 60.0, check = None)
+                            if message.author != bot.user:
+                                if response.author != bot.user:
+                                    if response.author.id == player.id:
+                                        if response.content in playerhand[x]:
+                                            played.append(response.content)
+                                            playround = playround + 1
+                                        elif response.content not in playerhand[x]:
+                                            await message.send('HA! You think you can fool me? Think thrice.')
+                                    elif response.author.id != player.id:
+                                        await message.send("Nowadays, people are very impatient, aren't they?")
+                        except asyncio.TimeoutError:
+                            await message.send('Next... why am I doing this? Suffering from no repsonse.')
+                            playround = 2
+                            getSum = True
+                    
+                    if getSum == False:
+                        if sum(played) == 10:
+                            await message.send('Yes, a 10!')
+                        elif played[0] == 10 and played[1] == 10:
+                            await message.send('DOUBLE TEN!!! TENTEN...')
+                        elif sum(played) != 10:
+                            await message.send('WTH? {}? REplay'.format(sum(played)))
+                            getDecline = False
+# Finalizing and resend card in hand
+                for i in played:
+                    playerhand[x].remove(i)
                 await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
-                await y.send('This is your card in hand.\n{}'.format(playerhand[z]))
-                await message.send('{} still have {} left.\n{} still have {} left.'.format(player, len(playerhand[x]), y, len(playerhand[z])))
-                
-                for i in playerhand:
-                    if i:
-                        pass
-                    elif not i:
-                        win = 1
-                        winnerhand = playerhand.index(i)
-                        winner = players[winnerhand]
-                        await message.send('{} is the winner.'.format(winner.mention))
-
-            await asyncio.sleep(4)
-# Sending results
-    await message.send('Sending in the scoreboard.')
-    await asyncio.sleep(2)
-    for player in players:
-        hand = players.index(player)
-        await message.send("{} with {} card(s) left.".format(player.name, len(playerhand[hand])))
-
+# Check for winner
+        for winner in players:
+            x = players.index(winner)
+            if playerhand[x]:
+                await message.send('{} still have {} card(s).'.format(winner.name, len(playerhand[x])))
+            elif not playerhand[x]:
+                await message.send('{} is the winner!'.format(winner.mention))
+                win = 1
+                    
 
 
 
