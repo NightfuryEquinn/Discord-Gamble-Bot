@@ -183,7 +183,7 @@ Pair of Jack, Queen, King, respectively are TEN.
 First to clear hand after deck is empty, wins!
 ```
 gb mt @p1 @... @p10 - Min of 3 players / Max of 10 players
-🤹 Pick 🃏 Deck
+🤹 Pick 🃏 Draw
 ```
 '''.format(name),
 color = random.choice(colors))
@@ -643,7 +643,7 @@ async def matchten(message, *name: discord.Member):
     await asyncio.sleep(5)
 
     pick = '🤹'
-    deck = '🃏'
+    draw = '🃏'
     deck = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 69]
     pickplayeremojis = ['🥮', '🍣', '🍱', '🍙', '🍩', '🌮', '🥗', '🥘', '🍵', '🍡']
     pickcardemojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵']
@@ -689,18 +689,18 @@ async def matchten(message, *name: discord.Member):
             else:
                 await message.send('Normal person.')
 # Choose to pick from player or pick from deck
-            choose = await message.send('Pick or Deck? {}'.format(player.mention))
-            for choose_emoji in [pick, deck]:
+            choose = await message.send('Pick or Draw? {}'.format(player.mention))
+            for choose_emoji in [pick, draw]:
                 await choose.add_reaction(choose_emoji)
             
             def checkchoose(reaction, user):
-                return user == player and str(reaction) in [pick, deck]
+                return user == player and str(reaction) in [pick, draw]
 
             try:
                 reaction, user = await bot.wait_for('reaction_add', timeout = 60.0, check = checkchoose)
                 if str(reaction) == pick:
                     requestPick = True
-                elif str(reaction) == deck:
+                elif str(reaction) == draw:
                     requestDeck = True
             except asyncio.TimeoutError:
                 await message.send('{} lost a turn.'.format(player.name))
