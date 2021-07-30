@@ -789,7 +789,7 @@ async def matchten(message, *name: discord.Member):
                             if message.author != bot.user: 
                                 if response.author != bot.user:
                                     if response.author.id == player.id:
-                                        if response.content == 'Skip':
+                                        if response.content == 'skip':
                                             await message.send('{} skipped.'.format(player))
                                             playround = 2
                                             getSum = True
