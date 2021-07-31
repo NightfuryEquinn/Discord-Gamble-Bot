@@ -877,7 +877,19 @@ async def matchten(message, *name: discord.Member):
 # Function to stop the bot
 @bot.command()
 async def stop(message):
+    await message.send('Initializing shutdown sequence...')
+    await asyncio.sleep(1)
+    await message.send('Clearing all commands...')
+    await asyncio.sleep(1)
+    await message.send('Terminating quantum core...')
+    await asyncio.sleep(1)
+    await message.send('Quantum core is stable state... Shutting down...')
+    await asyncio.sleep(1)
+    await message.send('Shutdown sequence completed...')
     await bot.close()
+
+
+
 
 
 # Execute bot run
