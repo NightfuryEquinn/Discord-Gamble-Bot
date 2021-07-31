@@ -874,7 +874,10 @@ async def matchten(message, *name: discord.Member):
                 win = 1
                     
 
-
+# Function to stop the bot
+@bot.command()
+async def stop(message):
+    bot.clear()
 
 
 # Execute bot run
