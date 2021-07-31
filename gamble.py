@@ -137,7 +137,6 @@ description = '''
 Chapter 4 - 🧧 DouDiZhu / 斗地主
 
 Another legendary card game! But more advanced 😳
-With a twist of voting the card(s) played. Again.
 Each player has 17 cards.
 3 cards remaining goes whoever called for Landlord after shown to all players.
 2 players (Peasant Team) 👩🏻‍🌾 compete against the Landlord 🤴🏻
@@ -145,7 +144,7 @@ Landlord wins if hand emptied, vice versa.
 CJ is the boss, 3 is the servant here. Suits are irrelevant 😎
 ```
 gb ddz @p1 @p2 @p3 -- Must and only three players
-✅ Join game ❎ Cancel game 👌 Agree 💩 Decline 
+First tag is Landlord, rest are peasant.
 ```
 ```
 SCORETABLE 💱 Largest to Smallest
@@ -175,7 +174,7 @@ title = 'No-Currency Gamble Bot Handbook 📕',
 description = '''
 {} finished reading. Remember to put back the book to the shelf 🙄.
 
-Chapter 5 - 🔟 Match Ten / 合十
+Chapter 5 - 🔟 Match Ten / 拼十
 
 Casual luck game.
 Match a pair of cards and make a TEN.
@@ -184,7 +183,7 @@ First to clear hand after deck is empty, wins!
 ```
 gb mt @p1 @... @p10 - Min of 3 players / Max of 10 players
 🤹 Pick 🃏 Draw
-Skip to Skip
+Type skip to skip during play card
 ```
 '''.format(name),
 color = random.choice(colors))
@@ -621,10 +620,46 @@ Have some sportsmanship or 'gambleship'? 👻
 # DouDiZhu for and only three
 @bot.command(aliases = ['ddz'])
 async def doudizhu(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member):
-    await message.send('Under dev.')
+    await message.send('{} is the landlord, {} and {} are peasant.'.format(firstName, secondName, thirdName))
+    await asyncio.sleep(4)
 
-    deck = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 'J', 'J', 'J', 'J', 'Q', 'Q', 'Q', 'Q', 'K', 'K', 'K', 'K', 'BW', 'CJ']
+    landlord_hand = []
+    peasant1_hand = []
+    peasant2_hand = []
+    
+    players = [firstName, secondName, thirdName]
+    playerhand = [landlord_hand, peasant1_hand, peasant2_hand]
 
+    deck = ['1', '1', '1', '1', '2', '2', '2', '2', '3', '3', '3' , '3', '4', '4', '4', '4', '5', '5', '5', '5', '6', '6', '6', '6', '7', '7', '7', '7', '8', '8', '8', '8', '9', '9', '9', '9', '10', '10', '10', '10', 'J', 'J', 'J', 'J', 'Q', 'Q', 'Q', 'Q', 'K', 'K', 'K', 'K', 'BW', 'CJ']
+    '3' < '4' < '5' < '6' < '7' < '8' < '9' < '10' < 'J' < 'Q' < 'K' < '1' < '2' < 'BW' < 'CJ'
+# Shuffle and assign deck for players
+    forLandlord = []
+    for i in range(0, 3):
+        random.shuffle(deck)
+        a = random.choice(deck)
+        forLandlord.append(a)
+        deck.remove(a)
+    
+    for i in range(0, 17):
+        for player in players:
+            x = players.index(player)
+            random.shuffle(deck)
+            a = random.choice(deck)
+            playerhand[x].append(a)
+            deck.remove(a)
+# Show three cards for landlord and appeend to landlord deck
+    await message.send('This is the three extra cards for landlord.\n{}'.format(forLandlord))
+    for i in forLandlord:
+        landlord_hand.append(i)
+# Send card to players
+    for player in players:
+        x = players.index(player)
+        await player.send('This is your deck.\n{}'.format(playerhand[x]))
+
+    await message.send('Game will start soon. In 10 seconds.')
+    await asyncio.sleep(10)
+# Loop while no one hand is empty
+    
 
 
 
@@ -784,23 +819,31 @@ async def matchten(message, *name: discord.Member):
                     playround = 0
                     while playround != 2:
                         try:
-                            response = await bot.wait_for('message', timeout = 60.0, check = None)
+                            while True:
+                                response = await bot.wait_for('message', timeout = 60.0, check = None)
 # Ignore and reject message from bot or other players
-                            if message.author != bot.user: 
-                                if response.author != bot.user:
-                                    if response.author.id == player.id:
-                                        if response.content == 'skip':
-                                            await message.send('{} skipped.'.format(player))
-                                            playround = 2
-                                            getSum = True
-                                        else:
-                                            if int(response.content) in playerhand[x]:
-                                                played.append(int(response.content))
-                                                playround = playround + 1
-                                            elif int(response.content) not in playerhand[x]:
-                                                await message.send('HA! You think you can fool me? Think thrice 💩')
-                                    elif response.author.id != player.id:
-                                        await message.send("Nowadays, people are very impatient, aren't they? 🙄")
+                                if message.author != bot.user: 
+                                    if response.author != bot.user:
+                                        if response.author.id == player.id:
+                                            if response.content.lower() == 'skip':
+                                                await message.send('{} skipped.'.format(player))
+                                                playround = 2
+                                                getSum = True
+                                                break
+                                            else:
+                                                if int(response.content) in playerhand[x]:
+                                                    played.append(int(response.content))
+                                                    playround = playround + 1
+                                                    break
+                                                elif int(response.content) not in playerhand[x]:
+                                                    await message.send('HA! You think you can fool me? Think thrice 💩')
+                                                    continue
+                                                else:
+                                                    await message.send('I beg your pardon? Type skip to skip or play your card.')
+                                                    continue
+                                        elif response.author.id != player.id:
+                                            await message.send("Nowadays, people are very impatient, aren't they? 🙄")
+                                            continue
                         except asyncio.TimeoutError:
                             await message.send('Next... why am I doing this? Suffering from no repsonse 😵')
                             playround = 2
