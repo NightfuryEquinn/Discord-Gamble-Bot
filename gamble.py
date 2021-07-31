@@ -887,6 +887,7 @@ async def stop(message):
     await asyncio.sleep(1)
     await message.send('Shutdown sequence completed...')
     await bot.close()
+    await bot.run(os.environ.get('BOT_SECRET_TOKEN'))
 
 
 
