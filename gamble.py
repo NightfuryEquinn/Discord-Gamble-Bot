@@ -564,7 +564,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                 await asyncio.sleep(2)
 
                 if requestPass == False:
-                    await message.send('```{}```\nCard(s) played by {}.'.format(played, player.mention))
+                    await message.send('```{}```\nCard(s) played by {}.'.format(tempplayed, player.mention))
                     if len(played) == 1:
                         await message.send('Just a single')
                     elif len(played) == 2:
@@ -584,6 +584,10 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                     judge = player
                     while judge == player:
                         judge = random.choice(players)
+
+                    judgem = await message.send('{}, do you approve?'.format(judge.mention))
+                    for judge_emoji in [accept, decline]:
+                        await judgem.add_reaction(judge_emoji)
                     
                     def checkjudge(reaction, user):
                         return user == judge and str(reaction) in [accept, decline]
