@@ -532,7 +532,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                             else:
                                 if user.content in playerhand[x]:
                                     playcard = playcard + 1
-                                    played.append(user.content)
+                                    tempplayed.append(user.content)
                                 elif user.content not in playerhand[x]:
                                     await message.send('You sure the card in your hand?')
                     elif played:
