@@ -524,32 +524,32 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                     if not played:
                         playcard = 0
                         while playcard < 5:
-                            user = await bot.wait_for('message', timeout = 45.0, check = checkplay)
-                            if user.content.lower() == 'pass':
+                            response = await bot.wait_for('message', timeout = 45.0, check = checkplay)
+                            if response.content.lower() == 'pass':
                                 playcard = 5
                                 requestPass = True
                                 await message.send('{} skipped.'.format(player.name))
                             else:
-                                if user.content in playerhand[x]:
+                                if response.content in playerhand[x]:
                                     playcard = playcard + 1
-                                    tempplayed.append(user.content)
-                                elif user.content not in playerhand[x]:
+                                    tempplayed.append(response.content)
+                                elif response.content not in playerhand[x]:
                                     await message.send('You sure the card in your hand?')
                     elif played:
                         await message.send("{}, you can only play {} card(s). OR just pass.".format(player.mention, len(played)))
                         playcard = 0
                         while playcard < len(played):
-                            user = await bot.wait_for('message', timeout = 45.0, check = checkplay)
-                            if user.content.lower() == 'pass':
+                            response = await bot.wait_for('message', timeout = 45.0, check = checkplay)
+                            if response.content.lower() == 'pass':
                                 playcard == len(played)
                                 requestPass = True
                                 passcount = passcount + 1
                                 await message.send('{} skipped.'.format(player.name))
                             else:
-                                if user.content in playerhand[x]:
+                                if response.content in playerhand[x]:
                                     playcard = playcard + 1
-                                    tempplayed.append(user.content)
-                                elif user.content not in playerhand[x]:
+                                    tempplayed.append(response.content)
+                                elif response.content not in playerhand[x]:
                                     await message.send('You sure the card in your hand?')
                         if len(played) != len(tempplayed):
                             await message.send('{}, you did not play the card(s) required. You are skipped.')
