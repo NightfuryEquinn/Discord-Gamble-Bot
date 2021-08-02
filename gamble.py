@@ -144,20 +144,21 @@ CJ is the boss, 3 is the servant here. Suits are irrelevant 😎
 ```
 gb ddz @p1 @p2 @p3 -- Must and only three players
 First tag is Landlord, rest are peasant.
+👌 Accept 💩 Decline
 ```
 ```
 SCORETABLE 💱 Largest to Smallest
 Nuke 💣 [Double Joker]
 Bomb 🧨 [Four of a Kind]
-Large Space Shuttle 🚀 [2 or more Four of a Kind + Pairs]
-Small Space Shuttle 🚀 [2 or more Four of a Kind + Single]
+Large Space Shuttle 🚀 [2 or more Four of a Kind + Pairs according to number of trio]
+Small Space Shuttle 🚀 [2 or more Four of a Kind + Single according to number of trio]
 Space Shuttle 🚀 [2 or more Four of a Kind]
+Straight
 Pairs Four 
 Single Four
-Large Airplane ✈️ [2 or more Trio + Pairs]
-Small Airplane ✈️ [2 or more Trio + Single]
+Large Airplane ✈️ [2 or more Trio + Pairs according to number of trio]
+Small Airplane ✈️ [2 or more Trio + Single according to number of trio]
 Airplane ✈️ [2 or more Trio]
-Trio 
 Trio 
 Pairs
 Single
@@ -514,9 +515,6 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
 # Proceed player round
             await message.send("{}'s turn. Play your card one by one".format(player.mention))
 
-            def checkplay(message, user):
-                return user == player and user.channel == message.channel
-            
             checkplaycard = False
             while checkplaycard == False:
                 checkplaycard = True
@@ -524,33 +522,39 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                     if not played:
                         playcard = 0
                         while playcard < 5:
-                            response = await bot.wait_for('message', timeout = 45.0, check = checkplay)
-                            if response.content.lower() == 'pass':
-                                playcard = 5
-                                requestPass = True
-                                await message.send('{} skipped.'.format(player.name))
-                            else:
-                                if response.content in playerhand[x]:
-                                    playcard = playcard + 1
-                                    tempplayed.append(response.content)
-                                elif response.content not in playerhand[x]:
-                                    await message.send('You sure the card in your hand?')
+                            response = await bot.wait_for('message', timeout = 45.0, check = None)
+                            if message.author != bot.user: 
+                                if response.author != bot.user:
+                                    if response.author.id == player.id:
+                                        if response.content.lower() == 'pass':
+                                            playcard = 5
+                                            requestPass = True
+                                            await message.send('{} skipped.'.format(player.name))
+                                        else:
+                                            if response.content in playerhand[x]:
+                                                playcard = playcard + 1
+                                                tempplayed.append(response.content)
+                                            elif response.content not in playerhand[x]:
+                                                await message.send('You sure the card in your hand?')
                     elif played:
                         await message.send("{}, you can only play {} card(s). OR just pass.".format(player.mention, len(played)))
                         playcard = 0
                         while playcard < len(played):
-                            response = await bot.wait_for('message', timeout = 45.0, check = checkplay)
-                            if response.content.lower() == 'pass':
-                                playcard == len(played)
-                                requestPass = True
-                                passcount = passcount + 1
-                                await message.send('{} skipped.'.format(player.name))
-                            else:
-                                if response.content in playerhand[x]:
-                                    playcard = playcard + 1
-                                    tempplayed.append(response.content)
-                                elif response.content not in playerhand[x]:
-                                    await message.send('You sure the card in your hand?')
+                            response = await bot.wait_for('message', timeout = 45.0, check = None)
+                            if message.author != bot.user:
+                                if response.author != bot.user:
+                                    if response.author.id == player.id:
+                                        if response.content.lower() == 'pass':
+                                            playcard == len(played)
+                                            requestPass = True
+                                            passcount = passcount + 1
+                                            await message.send('{} skipped.'.format(player.name))
+                                        else:
+                                            if response.content in playerhand[x]:
+                                                playcard = playcard + 1
+                                                tempplayed.append(response.content)
+                                            elif response.content not in playerhand[x]:
+                                                await message.send('You sure the card in your hand?')
                         if len(played) != len(tempplayed):
                             await message.send('{}, you did not play the card(s) required. You are skipped.')
                             requestPass = True
@@ -626,6 +630,9 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
     await message.send('{} is the landlord, {} and {} are peasant.'.format(firstName, secondName, thirdName))
     await asyncio.sleep(4)
 
+    accept = '👌'
+    decline = '💩'
+
     landlord_hand = []
     peasant1_hand = []
     peasant2_hand = []
@@ -662,12 +669,113 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
     await message.send('Game will start soon. In 10 seconds.')
     await asyncio.sleep(10)
 # Loop while no one hand is empty
-    
+    win = 0
+    played = []
+    tempplayed = []
+    passcount = 0
+    while win == 0:
+        for player in players:
+            x = players.index(player)
+            requestPass = False
+            
+            if passcount == 3:
+                passcount = 0
+                played.clear()
+            elif passcount != 3:
+                pass
 
+            await message.send("{}'s turn. Play your card one by one.".format(player.mention))
 
+            checkplaycard = False
+            while checkplaycard == False:
+                checkplaycard = True
+                try:
+                    if not played:
+                        playcard = 0
+                        while playcard < 21:
+                            response = await bot.wait_for('message', timeout = 45.0, check = None)
+                            if message.author != bot.user: 
+                                if response.author != bot.user:
+                                    if response.author.id == player.id:
+                                        if response.content.lower() == 'pass':
+                                            playcard = 21
+                                            requestPass = True
+                                            await message.send('{} skipped.'.format(player.name))
+                                        else:
+                                            if response.content in playerhand[x]:
+                                                playcard = playcard + 1
+                                                tempplayed.append(response.content)
+                                            elif response.content not in playerhand[x]:
+                                                await message.send('You sure the card in your hand?')
+                    elif played:
+                        await message.send("{}, you can only play {} card(s). OR just pass.".format(player.mention, len(played)))
+                        playcard = 0
+                        while playcard < len(played):
+                            response = await bot.wait_for('message', timeout = 45.0, check = None)
+                            if message.author != bot.user:
+                                if response.author != bot.user:
+                                    if response.author.id == player.id:
+                                        if response.content.lower() == 'pass':
+                                            playcard == len(played)
+                                            requestPass = True
+                                            passcount = passcount + 1
+                                            await message.send('{} skipped.'.format(player.name))
+                                        else:
+                                            if response.content in playerhand[x]:
+                                                playcard = playcard + 1
+                                                tempplayed.append(response.content)
+                                            elif response.content not in playerhand[x]:
+                                                await message.send('You sure the card in your hand?')
+                        if len(played) != len(tempplayed):
+                            await message.send('{}, you did not play the card(s) required. You are skipped.')
+                            requestPass = True
+                except asyncio.TimeoutError:
+                    played.clear()
+                    for i in tempplayed:
+                        played.append(i)
+                    tempplayed.clear()
+                    played.sort()
 
+                await asyncio.sleep(2)
+# Check card
+                if requestPass == False:
+                    await message.send('See who will be pick as the judge.')
 
+                    judge = player
+                    while judge == player:
+                        judge = random.choice(players)
 
+                    judgem = await message.send('{}, do you approve?'.format(judge.mention))
+                    for judge_emoji in [accept, decline]:
+                        await judgem.add_reaction(judge_emoji)
+                    
+                    def checkjudge(reaction, user):
+                        return user == judge and str(reaction) in [accept, decline]
+
+                    try:
+                        reaction, user = await bot.wait_for('reaction_add', timeout = 30.0, check = checkjudge)
+                        if str(reaction) == accept:
+                            await message.send('{} accepted!'.format(judge.name))
+                        elif str(reaction) == decline:
+                            await message.send('{} rejected! {}, replay your card.'.format(judge.name, player.mention))
+                    except asyncio.TimeoutError:
+                        await message.send('The judge did not react so counted as accepted.')
+
+                    for i in played:
+                        playerhand[x].remove(i)
+                    await player.send('This is your card in hand.\n{}'.format(playerhand[x]))
+
+# Check for winner
+        for player in players:
+            x = players.index(player)
+            if playerhand[x]:
+                await message.send('{} still have {} card(s) left.'.format(player.name, len(playerhand[x])))
+            elif not playerhand[x]:
+                if x == 0:
+                    await message.send('{} is the winner! Landlord won!'.format(player.mention))
+                elif x == 1 or x == 2:
+                    await message.send('{} is the winner! Peasant team won!'.format(player.mention))
+                win = 1
 
 
 # Match Ten 
