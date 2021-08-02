@@ -470,7 +470,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
 
     await message.send('Before you play, make sure you know the rules.\nBEcause there is no validation for who is bigger 😌\nNo good for you to cheat, right?')
     await asyncio.sleep(5)
-    await message.send('Be ready ✔️ ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
+    await message.send('Be ready 🚦 ... Card shuffling 🔄 ...\nD = ♦️ Diamond 方块\nC = ♣️ Club 梅花\nH = ♥️ Heart 红心\nS = ♠️ Spade 黑桃')
 
 # Set deck and shuffle and distribute and send to players
     deck = [
@@ -513,7 +513,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
             elif passcount != 3:
                 pass
 # Proceed player round
-            await message.send("{}'s turn. Play your card one by one".format(player.mention))
+            await message.send("{}'s turn. Play your card one by one 🤔".format(player.mention))
 
             checkplaycard = False
             while checkplaycard == False:
@@ -529,15 +529,15 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                                         if response.content.lower() == 'pass':
                                             playcard = 5
                                             requestPass = True
-                                            await message.send('{} skipped.'.format(player.name))
+                                            await message.send('{} skipped 🤚'.format(player.name))
                                         else:
                                             if response.content in playerhand[x]:
                                                 playcard = playcard + 1
                                                 tempplayed.append(response.content)
                                             elif response.content not in playerhand[x]:
-                                                await message.send('You sure the card in your hand?')
+                                                await message.send('You sure the card in your hand? 😒')
                     elif played:
-                        await message.send("{}, you can only play {} card(s). OR just pass.".format(player.mention, len(played)))
+                        await message.send("{}, you can only play {} card(s). OR just pass 😶".format(player.mention, len(played)))
                         playcard = 0
                         while playcard < len(played):
                             response = await bot.wait_for('message', timeout = 45.0, check = None)
@@ -548,15 +548,15 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                                             playcard == len(played)
                                             requestPass = True
                                             passcount = passcount + 1
-                                            await message.send('{} skipped.'.format(player.name))
+                                            await message.send('{} skipped 🤚'.format(player.name))
                                         else:
                                             if response.content in playerhand[x]:
                                                 playcard = playcard + 1
                                                 tempplayed.append(response.content)
                                             elif response.content not in playerhand[x]:
-                                                await message.send('You sure the card in your hand?')
+                                                await message.send('You sure the card in your hand? 😒')
                         if len(played) != len(tempplayed):
-                            await message.send('{}, you did not play the card(s) required. You are skipped.')
+                            await message.send('{}, you did not play the card(s) required. You are skipped 😠')
                             requestPass = True
                 except asyncio.TimeoutError:
                     played.clear()
@@ -568,28 +568,28 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                 await asyncio.sleep(2)
 
                 if requestPass == False:
-                    await message.send('```{}```\nCard(s) played by {}.'.format(tempplayed, player.mention))
+                    await message.send('```{}```\nCard(s) played by {} 😳'.format(tempplayed, player.mention))
                     if len(played) == 1:
-                        await message.send('Just a single')
+                        await message.send('Just a single 🥱')
                     elif len(played) == 2:
                         if played[0][1:2] == played[1][1:2]:
-                            await message.send('Double! or Pair!')
+                            await message.send('Double! or Pair! 😐')
                     elif len(played) == 3:
                         if played[0][1:2] == played[1][1:2] and played[1][1:2] == played[2][1:2]:
-                            await message.send('THREE of a kind!!!')
+                            await message.send('THREE of a kind!!! 😮')
                     elif len(played) == 4:
                         if played[0][1:2] == played[1][1:2] and played[1][1:2] == played[2][1:2] and played[2][1:2] == played[3][1:2]:
-                            await message.send('!!FOUR of a KIND!!')
+                            await message.send('!!FOUR of a KIND!! 😲')
                     elif len(played) == 5:
-                        await message.send('FIVE CARD of IDK what.')
+                        await message.send('FIVE CARD of IDK what 😱')
                     
-                    await message.send('See who will be pick as the judge.')
+                    await message.send('See who will be pick as the judge 🥶')
 
                     judge = player
                     while judge == player:
                         judge = random.choice(players)
 
-                    judgem = await message.send('{}, do you approve?'.format(judge.mention))
+                    judgem = await message.send('{}, do you approve? 🤫'.format(judge.mention))
                     for judge_emoji in [accept, decline]:
                         await judgem.add_reaction(judge_emoji)
                     
@@ -603,7 +603,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
                         elif str(reaction) == decline:
                             await message.send('{} rejected! {}, replay your card.'.format(judge.name, player.mention))
                     except asyncio.TimeoutError:
-                        await message.send('The judge did not react so counted as accepted.')
+                        await message.send('The judge did not react so counted as accepted 😝')
 
                     for i in played:
                         playerhand[x].remove(i)
@@ -615,7 +615,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
             if playerhand[x]:
                 await message.send('{} still have {} card(s) left.'.format(player.name, len(playerhand[x])))
             elif not playerhand[x]:
-                await message.send('{} is the winner!'.format(player.mention))
+                await message.send('{} is the winner! 🥳'.format(player.mention))
                 win = 1
 
 # Send the results
@@ -627,7 +627,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
 # DouDiZhu for and only three
 @bot.command(aliases = ['ddz'])
 async def doudizhu(message, firstName: discord.Member, secondName: discord.Member, thirdName: discord.Member):
-    await message.send('{} is the landlord, {} and {} are peasant.'.format(firstName, secondName, thirdName))
+    await message.send('{} is the landlord 😌 {} and {} are peasant.'.format(firstName, secondName, thirdName))
     await asyncio.sleep(4)
 
     accept = '👌'
@@ -658,7 +658,7 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
             playerhand[x].append(a)
             deck.remove(a)
 # Show three cards for landlord and appeend to landlord deck
-    await message.send('This is the three extra cards for landlord.\n{}'.format(forLandlord))
+    await message.send('This is the three extra cards for landlord 👀 \n{}'.format(forLandlord))
     for i in forLandlord:
         landlord_hand.append(i)
 # Send card to players
@@ -666,7 +666,7 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
         x = players.index(player)
         await player.send('This is your deck.\n{}'.format(playerhand[x]))
 
-    await message.send('Game will start soon. In 10 seconds.')
+    await message.send('Game will start soon. In 10 seconds 🕐')
     await asyncio.sleep(10)
 # Loop while no one hand is empty
     win = 0
@@ -684,7 +684,7 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
             elif passcount != 3:
                 pass
 
-            await message.send("{}'s turn. Play your card one by one.".format(player.mention))
+            await message.send("{}'s turn. Play your card one by one 😶".format(player.mention))
 
             checkplaycard = False
             while checkplaycard == False:
@@ -759,7 +759,7 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
                         elif str(reaction) == decline:
                             await message.send('{} rejected! {}, replay your card.'.format(judge.name, player.mention))
                     except asyncio.TimeoutError:
-                        await message.send('The judge did not react so counted as accepted.')
+                        await message.send('The judge did not react so counted as accepted 😝')
 
                     for i in played:
                         playerhand[x].remove(i)
@@ -772,9 +772,9 @@ async def doudizhu(message, firstName: discord.Member, secondName: discord.Membe
                 await message.send('{} still have {} card(s) left.'.format(player.name, len(playerhand[x])))
             elif not playerhand[x]:
                 if x == 0:
-                    await message.send('{} is the winner! Landlord won!'.format(player.mention))
+                    await message.send('{} is the winner! Landlord won! 🤠'.format(player.mention))
                 elif x == 1 or x == 2:
-                    await message.send('{} is the winner! Peasant team won!'.format(player.mention))
+                    await message.send('{} is the winner! Peasant team won! 🤯'.format(player.mention))
                 win = 1
 
 
