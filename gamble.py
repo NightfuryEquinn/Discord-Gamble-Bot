@@ -514,7 +514,7 @@ async def chodaidi(message, firstName: discord.Member, secondName: discord.Membe
 # Proceed player round
             await message.send("{}'s turn. Play your card one by one".format(player.mention))
 
-            def checkplay(user):
+            def checkplay(message, user):
                 return user == player and user.channel == message.channel
             
             checkplaycard = False
